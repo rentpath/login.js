@@ -1,4 +1,4 @@
-define ['jquery', 'primedia_events', 'jquery-cookie-rjs'], ($, events) ->
+define ['jquery', 'primedia_events', 'jquery-cookie'], ($, events) ->
   class Login
 
     hideIfLoggedInSelector:  '.js_hidden_if_logged_in'
