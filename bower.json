@@ -4,8 +4,8 @@
   "main": "login.js",
   "dependencies": {
     "jquery": null,
-    "primedia_events": null,
-    "jquery-cookie": "1.3.1"
+    "primedia-events": null,
+    "jquery-cookie": "1.4.0"
   },
   "ignore": [
     "package.json",
