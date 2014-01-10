@@ -9,7 +9,7 @@
     "baseUrl": ".",
     "dependencies": {
       "jquery": null,
-      "primedia-events": null,
+      "primedia_events": null,
       "jquery-cookie-rjs": null
     },
     "main": "login.js",

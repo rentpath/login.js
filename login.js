@@ -2,7 +2,7 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  define(['jquery', 'primedia-events', 'jquery-cookie'], function($, events) {
+  define(['jquery', 'primedia_events', 'jquery-cookie'], function($, events) {
     var Login;
     Login = (function() {
       Login.prototype.hideIfLoggedInSelector = '.js_hidden_if_logged_in';
