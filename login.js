@@ -81,12 +81,12 @@
       };
 
       Login.prototype._welcomeMessage = function() {
-        var has_welcome_message;
-        has_welcome_message = $('#welcome_message').length > 0;
-        if ($.cookie("user_type") === "new" && has_welcome_message) {
-          this._triggerModal($("#welcome_message"));
-        }
-        if (has_welcome_message) {
+        var element;
+        element = $('#welcome_message');
+        if (element.length > 0) {
+          if ($.cookie("user_type") === "new") {
+            this._triggerModal(element);
+          }
           return this.expireCookie("user_type");
         }
       };
