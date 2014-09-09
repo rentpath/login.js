@@ -56,8 +56,10 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
       @_bindSocialLink googleLink, "#{baseUrl}google_oauth2", $div
 
     _welcomeMessage: ->
-      @_triggerModal $("#welcome_message") if $.cookie("user_type") is "new"
-      @expireCookie "user_type"
+      element = $('#welcome_message')
+      if element.length > 0
+        @_triggerModal element if $.cookie("user_type") is "new"
+        @expireCookie "user_type"
 
     _enableLoginRegistration: =>
       $('#zutron_register_form form').submit (e) =>
