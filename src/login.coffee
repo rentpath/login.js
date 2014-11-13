@@ -196,7 +196,6 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
       window.location.assign obj.redirectUrl if obj.redirectUrl
 
     _generateErrors: (error, $box, eventName) ->
-      events.trigger('event/' + eventName, error)
       @_clearErrors $box.parent()
       messages = ''
       if error?
@@ -209,6 +208,7 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
       else
         messages += "An error has occured."
       $box.append "<ul>#{messages}</ul>"
+      events.trigger('event/' + eventName, error)
 
     _formatError: (key, value) ->
       switch key

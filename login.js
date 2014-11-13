@@ -314,7 +314,6 @@
 
       Login.prototype._generateErrors = function(error, $box, eventName) {
         var $form, messages;
-        events.trigger('event/' + eventName, error);
         this._clearErrors($box.parent());
         messages = '';
         if (error != null) {
@@ -331,7 +330,8 @@
         } else {
           messages += "An error has occured.";
         }
-        return $box.append("<ul>" + messages + "</ul>");
+        $box.append("<ul>" + messages + "</ul>");
+        return events.trigger('event/' + eventName, error);
       };
 
       Login.prototype._formatError = function(key, value) {
