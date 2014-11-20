@@ -279,7 +279,7 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
     _clearErrors: ($div) ->
       $div.find('form p').removeClass('error')
       $div.find('.errors').empty()
-      events.trigger('event/clearLoginErrors')
+      events.trigger('event/loginErrorsCleared')
 
     _bindSocialLink: ($link, url, $div) ->
       $link.on "click", =>

@@ -447,7 +447,7 @@
       Login.prototype._clearErrors = function($div) {
         $div.find('form p').removeClass('error');
         $div.find('.errors').empty();
-        return events.trigger('event/clearLoginErrors');
+        return events.trigger('event/loginErrorsCleared');
       };
 
       Login.prototype._bindSocialLink = function($link, url, $div) {
