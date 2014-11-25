@@ -4,7 +4,15 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
     hideIfLoggedInSelector:  '.js_hidden_if_logged_in'
     hideIfLoggedOutSelector: '.js_hidden_if_logged_out'
 
-    constructor: ->
+    DEFAULT_OPTIONS = {
+      prefillEmailInput: true
+    }
+
+    constructor: (options = {}) ->
+      @options = {}
+      for key, value of DEFAULT_OPTIONS
+        @options[key] = if options[key]? then options[key] else value
+
       @_overrideDependencies()
 
       @my =
@@ -270,7 +278,7 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
     _triggerModal: ($div) =>
         @_clearErrors $div
         $div.prm_dialog_open()
-        $div.find('#email, #auth_key').val(@my.zmail) if @my.zmail
+        $div.find('#email, #auth_key').val(@my.zmail) if @options.prefillEmailInput && @my.zmail
         $div.find(':input').filter(':visible:first').focus()
         $div.on "click", "a.close", ->
           $div.prm_dialog_close()
@@ -279,6 +287,7 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
     _clearErrors: ($div) ->
       $div.find('form p').removeClass('error')
       $div.find('.errors').empty()
+      events.trigger('event/loginErrorsCleared')
 
     _bindSocialLink: ($link, url, $div) ->
       $link.on "click", =>
@@ -346,7 +355,7 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
         @_clearInputs = ->
 
   instance: {}
-  init: -> @instance = new Login()
+  init: (options = {}) -> @instance = new Login(options)
   wireupSocialLinks: -> @instance.wireupSocialLinks()
   toggleRegistrationDiv: (div) -> @instance.toggleRegistrationDiv(div)
   expireCookie: -> @instance.expireCookie()

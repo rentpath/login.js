@@ -5,14 +5,29 @@
   define(['jquery', 'primedia_events', 'jquery.cookie'], function($, events) {
     var Login;
     Login = (function() {
+      var DEFAULT_OPTIONS;
+
       Login.prototype.hideIfLoggedInSelector = '.js_hidden_if_logged_in';
 
       Login.prototype.hideIfLoggedOutSelector = '.js_hidden_if_logged_out';
 
-      function Login() {
+      DEFAULT_OPTIONS = {
+        prefillEmailInput: true
+      };
+
+      function Login(options) {
+        var key, value;
+        if (options == null) {
+          options = {};
+        }
         this._triggerModal = __bind(this._triggerModal, this);
         this._submitEmailRegistration = __bind(this._submitEmailRegistration, this);
         this._enableLoginRegistration = __bind(this._enableLoginRegistration, this);
+        this.options = {};
+        for (key in DEFAULT_OPTIONS) {
+          value = DEFAULT_OPTIONS[key];
+          this.options[key] = options[key] != null ? options[key] : value;
+        }
         this._overrideDependencies();
         this.my = {
           zmail: $.cookie('zmail'),
@@ -434,7 +449,7 @@
       Login.prototype._triggerModal = function($div) {
         this._clearErrors($div);
         $div.prm_dialog_open();
-        if (this.my.zmail) {
+        if (this.options.prefillEmailInput && this.my.zmail) {
           $div.find('#email, #auth_key').val(this.my.zmail);
         }
         $div.find(':input').filter(':visible:first').focus();
@@ -446,7 +461,8 @@
 
       Login.prototype._clearErrors = function($div) {
         $div.find('form p').removeClass('error');
-        return $div.find('.errors').empty();
+        $div.find('.errors').empty();
+        return events.trigger('event/loginErrorsCleared');
       };
 
       Login.prototype._bindSocialLink = function($link, url, $div) {
@@ -554,8 +570,11 @@
     })();
     return {
       instance: {},
-      init: function() {
-        return this.instance = new Login();
+      init: function(options) {
+        if (options == null) {
+          options = {};
+        }
+        return this.instance = new Login(options);
       },
       wireupSocialLinks: function() {
         return this.instance.wireupSocialLinks();
