@@ -409,7 +409,10 @@
       Login.prototype._showLogout = function() {
         var $logLink;
         $logLink = $("a.login");
-        $logLink.addClass("logout").removeClass("login");
+        $logLink.each(function() {
+          return this.className = "logout " + this.className;
+        });
+        $logLink.removeClass("login");
         return $('.link_text', $logLink).text('Log Out');
       };
 
