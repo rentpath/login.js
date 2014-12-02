@@ -251,7 +251,10 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
 
     _showLogout: ->
       $logLink = $("a.login")
-      $logLink.addClass("logout").removeClass("login")
+      # Add class to beginning to ensure it's picked up by autotagging
+      $logLink.each ->
+        @className = "logout #{@className}"
+      $logLink.removeClass("login")
       $('.link_text',$logLink).text('Log Out')
 
     _showLogin: ->
