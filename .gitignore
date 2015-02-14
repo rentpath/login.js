@@ -1,4 +1,5 @@
 .DS_Store
 .rvmrc
-vendor/ruby
-vendor/jam
+.bundle/
+node_modules/
+vendor/

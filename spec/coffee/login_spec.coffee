@@ -4,7 +4,6 @@ describe "Login", ->
 
   beforeEach ->
     ready = false
-
     require ['../../login', 'jasmine-jquery'], (Login) ->
       Login.init()
       login = Login.instance
@@ -15,7 +14,6 @@ describe "Login", ->
       return ready
 
   describe "#_encodeURL", ->
-
     it "encodes the hash", ->
       url = "http://127.0.0.1/foo#bar"
       expect(login._encodeURL(url)).toBe("http://127.0.0.1/foo%23bar")
@@ -25,7 +23,6 @@ describe "Login", ->
       expect(login._encodeURL(url)).toBe("http://127.0.0.1/foo")
 
   describe "#_setEmail", ->
-
     it "assigns the zmail", ->
       login._setEmail(sampleEmail)
       expect(login.my.zmail).toEqual(sampleEmail)
@@ -35,19 +32,16 @@ describe "Login", ->
       expect($.cookie('zmail')).toEqual(sampleEmail)
 
   describe "#_showRegister", ->
-
     it "doesn't hide the link", ->
       login._showRegister()
       expect($('a.register').parent()).not.toHaveClass('hidden')
 
   describe "#_hideRegister", ->
-
     it "hides the link", ->
       login._hideRegister()
       expect($('a.register').parent()).toHaveClass('hidden')
 
   describe "#_showAccount", ->
-
     it "keeps the account link hidden without z_type_email", ->
       $.cookie('z_type_email', '')
       login._showAccount()
@@ -59,7 +53,6 @@ describe "Login", ->
       expect($('a.account').parent()).not.toHaveClass('hidden')
 
   describe "#_showLogout", ->
-
     it "flips the login link class", ->
       loginLink = $('a.login')
       login._showLogout()
@@ -85,7 +78,6 @@ describe "Login", ->
       expect(loginLink).toHaveText('Log In')
 
   describe "#_toggleElementsWhenLoggedIn", ->
-
     it "hides marked elements based on logged in state", ->
       login._toggleElementsWhenLoggedIn()
       elements = $('.js_hidden_if_logged_in')
@@ -109,11 +101,9 @@ describe "Login", ->
       expect(elements).not.toHaveCss(display: 'none')
 
   describe "#_toggleSessionState", ->
-
     for sessionType in ["temp","perm"]
 
       describe "with a #{sessionType} session", ->
-
         beforeEach ->
           login.my.session = sessionType
           spyOn login, '_hideRegister'
@@ -135,7 +125,6 @@ describe "Login", ->
           expect(login._toggleElementsWhenLoggedIn).toHaveBeenCalled()
 
     describe "without a session", ->
-
       beforeEach ->
         login.my.session = ""
         spyOn login, '_showRegister'
