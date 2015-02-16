@@ -129,7 +129,7 @@
         });
       });
     });
-    return describe("#_toggleSessionState", function() {
+    describe("#_toggleSessionState", function() {
       var sessionType, _i, _len, _ref;
       _ref = ["temp", "perm"];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -174,6 +174,77 @@
         return it("toggles elements when logged out", function() {
           return expect(login._toggleElementsWhenLoggedOut).toHaveBeenCalled();
         });
+      });
+    });
+    describe('#_formatError', function() {
+      describe('base', function() {
+        return it('returns the value', function() {
+          var message;
+          message = login._formatError('base', 'test');
+          return expect(message).toBe('test');
+        });
+      });
+      describe('auth_key', function() {
+        it('returns a the value when one is present', function() {
+          var message;
+          message = login._formatError('auth_key', 'test');
+          return expect(message).toBe('test');
+        });
+        return it('returns an empty string when the value is falsy', function() {
+          var message;
+          message = login._formatError('auth_key', void 0);
+          return expect(message).toBe('');
+        });
+      });
+      describe('email', function() {
+        it('returns a message when value is present', function() {
+          var message;
+          message = login._formatError('email', 'test@example.com');
+          return expect(message).toBe('Email test@example.com');
+        });
+        return it('returns an empty string when the value is blank', function() {
+          var message;
+          message = login._formatError('email', '');
+          return expect(message).toBe('');
+        });
+      });
+      describe('password', function() {
+        it('returns a message when value is present', function() {
+          var message;
+          message = login._formatError('password', 'secret');
+          return expect(message).toBe('Password secret');
+        });
+        return it('returns an empty string when the value is blank', function() {
+          var message;
+          message = login._formatError('password', '');
+          return expect(message).toBe('');
+        });
+      });
+      return describe('passwword_confirmation', function() {
+        return it('returns a message when value is present', function() {
+          var message;
+          message = login._formatError('password_confirmation', 'secret');
+          return expect(message).toBe('Password confirmation secret');
+        });
+      });
+    });
+    describe('#sentenceCase', function() {
+      it('replaces underscores with spaces', function() {
+        var new_string;
+        new_string = login.sentenceCase('Hi_there');
+        return expect(new_string).toBe('Hi there');
+      });
+      return it('capitalizes the first letter', function() {
+        var new_string;
+        new_string = login.sentenceCase('hi there');
+        return expect(new_string).toBe('Hi there');
+      });
+    });
+    return describe('#capitalize', function() {
+      return it('capitalizes the first letter', function() {
+        var new_string;
+        new_string = login.capitalize('test');
+        return expect(new_string).toBe('Test');
       });
     });
   });

@@ -140,3 +140,55 @@ describe "Login", ->
 
       it "toggles elements when logged out", ->
         expect(login._toggleElementsWhenLoggedOut).toHaveBeenCalled()
+
+  describe '#_formatError', ->
+    describe 'base', ->
+      it 'returns the value', ->
+        message = login._formatError 'base', 'test'
+        expect(message).toBe('test')
+
+    describe 'auth_key', ->
+      it 'returns a the value when one is present', ->
+        message = login._formatError 'auth_key', 'test'
+        expect(message).toBe('test')
+
+      it 'returns an empty string when the value is falsy', ->
+        message = login._formatError 'auth_key', undefined
+        expect(message).toBe('')
+
+    describe 'email', ->
+      it 'returns a message when value is present', ->
+        message = login._formatError 'email', 'test@example.com'
+        expect(message).toBe('Email test@example.com')
+
+      it 'returns an empty string when the value is blank', ->
+        message = login._formatError 'email', ''
+        expect(message).toBe('')
+
+    describe 'password', ->
+      it 'returns a message when value is present', ->
+        message = login._formatError 'password', 'secret'
+        expect(message).toBe('Password secret')
+
+      it 'returns an empty string when the value is blank', ->
+        message = login._formatError 'password', ''
+        expect(message).toBe('')
+
+    describe 'passwword_confirmation', ->
+      it 'returns a message when value is present', ->
+        message = login._formatError 'password_confirmation', 'secret'
+        expect(message).toBe('Password confirmation secret')
+
+  describe '#sentenceCase', ->
+    it 'replaces underscores with spaces', ->
+      new_string = login.sentenceCase 'Hi_there'
+      expect(new_string).toBe('Hi there')
+
+    it 'capitalizes the first letter', ->
+      new_string = login.sentenceCase 'hi there'
+      expect(new_string).toBe('Hi there')
+
+  describe '#capitalize', ->
+    it 'capitalizes the first letter', ->
+      new_string = login.capitalize 'test'
+      expect(new_string).toBe('Test')
