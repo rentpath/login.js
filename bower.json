@@ -3,12 +3,19 @@
   "version": "0.2.23",
   "main": "login.js",
   "dependencies": {
-    "jquery": null,
-    "primedia_events": null,
-    "jquery.cookie": "1.4.0"
+    "jquery": "1.8.3",
+    "primedia_events": "git@github.com:RentPath/primedia_events.js.git",
+    "jquery.cookie": "1.4.0",
+    "requirejs": "~2.1"
+  },
+  "devDependencies": {
+    "jasmine-jquery": "~1.7.0"
   },
   "ignore": [
     "package.json",
     "README.md"
-  ]
+  ],
+  "resolutions": {
+    "jasmine-jquery": "~1.7.0"
+  }
 }

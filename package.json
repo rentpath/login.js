@@ -1,31 +1,20 @@
 {
   "name": "login",
   "version": "0.2.23",
+  "main": "login.js",
   "description": "Login Module for Z",
-  "homepage": "https://github.com/primedia/preserves",
-
-  "jam": {
-    "packageDir": "vendor/jam",
-    "baseUrl": ".",
-    "dependencies": {
-      "jquery": null,
-      "primedia_events": null,
-      "jquery.cookie": null
-    },
-    "main": "login.js",
-    "include": ["login.js"]
-  },
-
+  "homepage": "https://github.com/rentpath/login.js/",
   "author": {
     "name": "RentPath"
   },
-
-  "repositories": [
+  "repository": [
     {
-        "type": "git",
-        "url": "https://github.com/primedia/preserves.git"
+      "type": "git",
+      "url": "https://github.com/rentpath/login.js/"
     }
   ],
 
-  "github": "https://github.com/primedia/preserves.git"
+  "dependencies": {
+    "bower": "~1.3.1"
+  }
 }

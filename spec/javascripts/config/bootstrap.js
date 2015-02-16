@@ -1,7 +1,10 @@
-requirejs.config({
-  waitSeconds: 120,
+require.config({
+  waitSeconds: "120",
+  baseUrl: "/vendor/bower/",
   paths: {
-    "jasmine-jquery": "vendor/js/jasmine-jquery",
-    "jasmine-flight": "vendor/js/jasmine-flight"
+    "jquery": "jquery/jquery",
+    "jquery.cookie": "jquery.cookie/jquery.cookie",
+    "jasmine-jquery": "jasmine-jquery/lib/jasmine-jquery",
+    "primedia_events": "primedia_events/primedia-events"
   }
 });
