@@ -1,6 +1,6 @@
 {
   "name": "login",
-  "version": "0.2.23",
+  "version": "0.2.24",
   "main": "login.js",
   "dependencies": {
     "jquery": "1.8.3",
