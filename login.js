@@ -360,23 +360,25 @@
               return '';
             }
             break;
-          case "email":
-            if (value) {
-              return "Email " + value;
-            } else {
-              return '';
-            }
-            break;
-          case "password":
-            if (value) {
-              return "Password " + value;
-            } else {
-              return '';
-            }
-            break;
           case "password_confirmation":
-            return "Password Confirmation " + value;
+            return "Password confirmation " + value;
+          default:
+            if (value) {
+              return "" + (this.sentenceCase(key)) + " " + value;
+            } else {
+              return '';
+            }
         }
+      };
+
+      Login.prototype.sentenceCase = function(string) {
+        var new_string;
+        new_string = string.replace('_', ' ');
+        return this.capitalize(new_string);
+      };
+
+      Login.prototype.capitalize = function(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
       };
 
       Login.prototype._toggleSessionState = function() {

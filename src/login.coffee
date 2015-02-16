@@ -223,11 +223,17 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
         when "base" then value
         when "auth_key"
           if value then value else ''
-        when "email"
-          if value then "Email #{value}" else ''
-        when "password"
-          if value then "Password #{value}" else ''
-        when "password_confirmation" then "Password Confirmation #{value}"
+        when "password_confirmation" then "Password confirmation #{value}"
+        else
+          if value then "#{@sentenceCase(key)} #{value}" else ''
+
+    sentenceCase: (string) ->
+      new_string = string.replace('_', ' ')
+      @capitalize new_string
+
+    capitalize: (string) ->
+      string.charAt(0).toUpperCase() + string.slice(1)
+
 
     _toggleSessionState: ->
       if @my.session
