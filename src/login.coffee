@@ -73,7 +73,7 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
       $('#zutron_register_form form').submit (e) =>
         @_submitEmailRegistration $(e.target)
       $('#zutron_account_form form').submit (e) =>
-        @_submitChangeEmail $(e.target)
+        @_submitChangeUserData $(e.target)
       $('#zutron_login_form form').submit (e) =>
         @_submitLogin $(e.target)
       $('#zutron_reset_form form').submit (e) =>
@@ -125,13 +125,15 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
         error: (errors) =>
           @_generateErrors $.parseJSON(errors.responseText), $form.parent().find(".errors"), 'loginError'
 
-    _submitChangeEmail: ($form)->
-      new_email =
+    _submitChangeUserData: ($form)->
+      user_data =
+        first_name: $('input[name="new_first_name"]').val()
+        last_name: $('input[name="new_last_name"]').val()
         email: $('input[name="new_email"]').val()
         email_confirmation: $('input[name="new_email_confirm"]').val()
       $.ajax
         type: "GET" # POST does not work in IE
-        data: new_email
+        data: user_data
         datatype: 'json'
         url:  "#{zutron_host}/zids/#{@my.zid}/email_change.json"
         beforeSend: (xhr) ->
@@ -142,7 +144,7 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
             error = {'email': data.error}
             @_generateErrors error, $form.parent().find ".errors", 'changeEmailSuccessError'
           else
-            @_setEmail(new_email.email)
+            @_setEmail(user_data.email)
             events.trigger('event/changeEmailSuccess', data)
             $('#zutron_account_form').prm_dialog_close()
             @_triggerModal $("#zutron_success_form")

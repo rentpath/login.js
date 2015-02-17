@@ -114,7 +114,7 @@
         })(this));
         $('#zutron_account_form form').submit((function(_this) {
           return function(e) {
-            return _this._submitChangeEmail($(e.target));
+            return _this._submitChangeUserData($(e.target));
           };
         })(this));
         $('#zutron_login_form form').submit((function(_this) {
@@ -198,15 +198,17 @@
         });
       };
 
-      Login.prototype._submitChangeEmail = function($form) {
-        var new_email;
-        new_email = {
+      Login.prototype._submitChangeUserData = function($form) {
+        var user_data;
+        user_data = {
+          first_name: $('input[name="new_first_name"]').val(),
+          last_name: $('input[name="new_last_name"]').val(),
           email: $('input[name="new_email"]').val(),
           email_confirmation: $('input[name="new_email_confirm"]').val()
         };
         return $.ajax({
           type: "GET",
-          data: new_email,
+          data: user_data,
           datatype: 'json',
           url: "" + zutron_host + "/zids/" + this.my.zid + "/email_change.json",
           beforeSend: function(xhr) {
@@ -222,7 +224,7 @@
                 };
                 return _this._generateErrors(error, $form.parent().find(".errors", 'changeEmailSuccessError'));
               } else {
-                _this._setEmail(new_email.email);
+                _this._setEmail(user_data.email);
                 events.trigger('event/changeEmailSuccess', data);
                 $('#zutron_account_form').prm_dialog_close();
                 return _this._triggerModal($("#zutron_success_form"));
