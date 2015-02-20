@@ -140,9 +140,8 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
           xhr.overrideMimeType "text/json"
           xhr.setRequestHeader "Accept", "application/json"
         success: (data) =>
-          if data? and data.error # IE8 XDR Fallback
-            error = {'email': data.error}
-            @_generateErrors error, $form.parent().find ".errors", 'changeEmailSuccessError'
+          if data? and data.errors # IE8 XDR Fallback
+            @_generateErrors data.errors, $form.parent().find ".errors", 'changeEmailSuccessError'
           else
             @_setEmail(user_data.email)
             events.trigger('event/changeEmailSuccess', data)
