@@ -217,12 +217,8 @@
           },
           success: (function(_this) {
             return function(data) {
-              var error;
-              if ((data != null) && data.error) {
-                error = {
-                  'email': data.error
-                };
-                return _this._generateErrors(error, $form.parent().find(".errors", 'changeEmailSuccessError'));
+              if ((data != null) && data.errors) {
+                return _this._generateErrors(data.errors, $form.parent().find(".errors", 'changeEmailSuccessError'));
               } else {
                 _this._setEmail(user_data.email);
                 events.trigger('event/changeEmailSuccess', data);
