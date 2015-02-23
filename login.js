@@ -54,6 +54,24 @@
         })(this));
       }
 
+      Login.prototype._prefillAccountName = function($div) {
+        return $.ajax({
+          type: "GET",
+          datatype: 'json',
+          url: "" + zutron_host + "/zids/" + this.my.zid + "/",
+          beforeSend: function(xhr) {
+            xhr.overrideMimeType("text/json");
+            return xhr.setRequestHeader("Accept", "application/json");
+          },
+          success: (function(_this) {
+            return function(data) {
+              $div.find('input[name="new_first_name"]').val(data.zid.user.first_name);
+              return $div.find('input[name="new_last_name"]').val(data.zid.user.last_name);
+            };
+          })(this)
+        });
+      };
+
       Login.prototype._encodeURL = function(href) {
         var hash, path, _ref;
         _ref = href.split('#'), path = _ref[0], hash = _ref[1];
@@ -443,8 +461,13 @@
         }
         return $("a." + type + ", a.js_" + type).click((function(_this) {
           return function() {
+            var $div;
             $('.prm_dialog').prm_dialog_close();
-            return _this._triggerModal($(formID));
+            $div = $(formID);
+            if (type === 'account') {
+              _this._prefillAccountName($div);
+            }
+            return _this._triggerModal($div);
           };
         })(this));
       };

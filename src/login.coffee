@@ -35,6 +35,18 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
 
         $("a.logout").click (e) => @_logOut e
 
+    _prefillAccountName: ($div) ->
+      $.ajax
+        type: "GET" # POST does not work in IE
+        datatype: 'json'
+        url:  "#{zutron_host}/zids/#{@my.zid}/"
+        beforeSend: (xhr) ->
+          xhr.overrideMimeType "text/json"
+          xhr.setRequestHeader "Accept", "application/json"
+        success: (data) =>
+          $div.find('input[name="new_first_name"]').val(data.zid.user.first_name)
+          $div.find('input[name="new_last_name"]').val(data.zid.user.last_name)
+
     _encodeURL: (href) ->
       [path, hash] = href.split('#')
       hash = if hash then encodeURIComponent("##{hash}") else ""
@@ -283,16 +295,18 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
         @_clearInputs formID
       $("a.#{type}, a.js_#{type}").click =>
         $('.prm_dialog').prm_dialog_close()
-        @_triggerModal $(formID)
+        $div = $(formID)
+        @_prefillAccountName($div) if type is 'account'
+        @_triggerModal $div
 
     _triggerModal: ($div) =>
-        @_clearErrors $div
-        $div.prm_dialog_open()
-        $div.find('#email, #auth_key').val(@my.zmail) if @options.prefillEmailInput && @my.zmail
-        $div.find(':input').filter(':visible:first').focus()
-        $div.on "click", "a.close", ->
-          $div.prm_dialog_close()
-        @wireupSocialLinks $div
+      @_clearErrors $div
+      $div.prm_dialog_open()
+      $div.find('#email, #auth_key').val(@my.zmail) if @options.prefillEmailInput && @my.zmail
+      $div.find(':input').filter(':visible:first').focus()
+      $div.on "click", "a.close", ->
+        $div.prm_dialog_close()
+      @wireupSocialLinks $div
 
     _clearErrors: ($div) ->
       $div.find('form p').removeClass('error')
