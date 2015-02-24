@@ -359,7 +359,7 @@
             };
           })(this));
         } else {
-          messages += "An error has occured.";
+          messages += "An error has occurred.";
         }
         $box.append("<ul>" + messages + "</ul>");
         return events.trigger('event/' + eventName, error);

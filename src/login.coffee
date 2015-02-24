@@ -227,7 +227,7 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
           messages += "<li>#{formattedError}</li>"
           $form.find('.error input:first').focus()
       else
-        messages += "An error has occured."
+        messages += "An error has occurred."
       $box.append "<ul>#{messages}</ul>"
       events.trigger('event/' + eventName, error)
 
