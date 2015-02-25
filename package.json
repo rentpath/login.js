@@ -1,6 +1,6 @@
 {
   "name": "login",
-  "version": "0.2.26",
+  "version": "0.2.27",
   "main": "login.js",
   "description": "Login Module for Z",
   "homepage": "https://github.com/rentpath/login.js/",
