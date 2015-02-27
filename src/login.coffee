@@ -1,4 +1,13 @@
-define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
+define [
+  'jquery'
+  'primedia_events'
+  'src/formatter'
+  'jquery.cookie'
+], (
+  $
+  events
+  Formatter
+) ->
   class Login
 
     hideIfLoggedInSelector:  '.js_hidden_if_logged_in'
@@ -238,15 +247,8 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
           if value then value else ''
         when "password_confirmation" then "Password confirmation #{value}"
         else
-          if value then "#{@sentenceCase(key)} #{value}" else ''
-
-    sentenceCase: (string) ->
-      new_string = string.replace('_', ' ')
-      @capitalize new_string
-
-    capitalize: (string) ->
-      string.charAt(0).toUpperCase() + string.slice(1)
-
+          formatted_key = new Formatter(key).sentenceCase()
+          if value then "#{formatted_key} #{value}" else ''
 
     _toggleSessionState: ->
       if @my.session
