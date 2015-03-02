@@ -1,6 +1,6 @@
 var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-define(['jquery', 'primedia_events', 'src/formatter', 'src/error_handler', 'jquery.cookie'], function($, events, Formatter, ErrorHandler) {
+define(['jquery', 'primedia_events', 'src/error_handler', 'jquery.cookie'], function($, events, ErrorHandler) {
   var Login;
   Login = (function() {
     var DEFAULT_OPTIONS;

@@ -19,7 +19,7 @@ define [
         $form = @$box.parent().find 'form'
         $.each @error, (key, value) =>
           $form.find("##{key}").parent('p').addClass 'error'
-          formattedError = @_formatError key, value
+          formattedError = @formatError key, value
           messages += "<li>#{formattedError}</li>"
           $form.find('.error input:first').focus()
       else
@@ -28,7 +28,7 @@ define [
       events.trigger('event/' + eventName, error)
 
 
-    _formatError: (key, value) ->
+    formatError: (key, value) ->
       switch key
         when "base" then value
         when "auth_key"
@@ -38,11 +38,7 @@ define [
           formatted_key = new Formatter(key).sentenceCase()
           if value then "#{formatted_key} #{value}" else ''
 
-    _clearErrors: ($div) ->
+    clearErrors: ($div) ->
       $div.find('form p').removeClass('error')
       $div.find('.errors').empty()
       events.trigger('event/loginErrorsCleared')
-
-# _generateErrors
-# _clearErrors
-# _formatError

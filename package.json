@@ -37,9 +37,7 @@
   "scripts": {
     "compile": "gulp build",
     "build": "gulp dist",
-    "livereload": "gulp",
     "watch": "gulp",
-    "watch:dev": "gulp",
     "watch:test": "karma start",
     "test": "karma start --single-run",
     "test:clean": "npm run compile && npm test",

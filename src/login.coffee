@@ -1,13 +1,11 @@
 define [
   'jquery'
   'primedia_events'
-  'src/formatter'
   'src/error_handler'
   'jquery.cookie'
 ], (
   $
   events
-  Formatter
   ErrorHandler
 ) ->
   class Login

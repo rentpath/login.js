@@ -17,7 +17,7 @@ define(['jquery', 'primedia_events', 'src/formatter', 'jquery.cookie'], function
           return function(key, value) {
             var formattedError;
             $form.find("#" + key).parent('p').addClass('error');
-            formattedError = _this._formatError(key, value);
+            formattedError = _this.formatError(key, value);
             messages += "<li>" + formattedError + "</li>";
             return $form.find('.error input:first').focus();
           };
@@ -29,7 +29,7 @@ define(['jquery', 'primedia_events', 'src/formatter', 'jquery.cookie'], function
       return events.trigger('event/' + eventName, error);
     };
 
-    ErrorHandler.prototype._formatError = function(key, value) {
+    ErrorHandler.prototype.formatError = function(key, value) {
       var formatted_key;
       switch (key) {
         case "base":
@@ -53,7 +53,7 @@ define(['jquery', 'primedia_events', 'src/formatter', 'jquery.cookie'], function
       }
     };
 
-    ErrorHandler.prototype._clearErrors = function($div) {
+    ErrorHandler.prototype.clearErrors = function($div) {
       $div.find('form p').removeClass('error');
       $div.find('.errors').empty();
       return events.trigger('event/loginErrorsCleared');
