@@ -1,6 +1,6 @@
 var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-define(['jquery', 'primedia_events', 'src/formatter', 'jquery.cookie'], function($, events, Formatter) {
+define(['jquery', 'primedia_events', 'src/formatter', 'src/error_handler', 'jquery.cookie'], function($, events, Formatter, ErrorHandler) {
   var Login;
   Login = (function() {
     var DEFAULT_OPTIONS;
@@ -170,13 +170,13 @@ define(['jquery', 'primedia_events', 'src/formatter', 'jquery.cookie'], function
               events.trigger('event/emailRegistrationSuccess', data);
               return _this._redirectOnSuccess(data, $form);
             } else {
-              return _this._generateErrors(data, $form.parent().find(".errors"), 'emailRegistrationSuccessError');
+              return new ErrorHandler(data, $form.parent().find(".errors"), 'emailRegistrationSuccessError').generateErrors();
             }
           };
         })(this),
         error: (function(_this) {
           return function(errors) {
-            return _this._generateErrors($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'emailRegistrationError');
+            return new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'emailRegistrationError').generateErrors();
           };
         })(this)
       });
@@ -202,13 +202,13 @@ define(['jquery', 'primedia_events', 'src/formatter', 'jquery.cookie'], function
               events.trigger('event/loginSuccess', data);
               return _this._redirectOnSuccess(data, $form);
             } else {
-              return _this._generateErrors(data, $form.parent().find(".errors"), 'loginSuccessError');
+              return new ErrorHandler(data, $form.parent().find(".errors"), 'loginSuccessError').generateErrors();
             }
           };
         })(this),
         error: (function(_this) {
           return function(errors) {
-            return _this._generateErrors($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'loginError');
+            return new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'loginError').generateErrors();
           };
         })(this)
       });
@@ -234,7 +234,7 @@ define(['jquery', 'primedia_events', 'src/formatter', 'jquery.cookie'], function
         success: (function(_this) {
           return function(data) {
             if ((data != null) && data.errors) {
-              return _this._generateErrors(data.errors, $form.parent().find(".errors", 'changeEmailSuccessError'));
+              return new ErrorHandler(data.errors, $form.parent().find(".errors", 'changeEmailSuccessError')).generateErrors();
             } else {
               _this._setEmail(user_data.email);
               events.trigger('event/changeEmailSuccess', data);
@@ -245,7 +245,7 @@ define(['jquery', 'primedia_events', 'src/formatter', 'jquery.cookie'], function
         })(this),
         error: (function(_this) {
           return function(errors) {
-            return _this._generateErrors($.parseJSON(errors.responseText), $form.parent().find(".errors", 'changeEmailError'));
+            return new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors", 'changeEmailError')).generateErrors();
           };
         })(this)
       });
@@ -266,7 +266,7 @@ define(['jquery', 'primedia_events', 'src/formatter', 'jquery.cookie'], function
               error = {
                 'email': data.error
               };
-              return _this._generateErrors(error, $form.parent().find(".errors"), 'passwordResetSuccessError');
+              return new ErrorHandler(error, $form.parent().find(".errors"), 'passwordResetSuccessError').generateErrors();
             } else {
               $form.parent().empty();
               events.trigger('event/passwordResetSuccess', data);
@@ -276,7 +276,7 @@ define(['jquery', 'primedia_events', 'src/formatter', 'jquery.cookie'], function
         })(this),
         error: (function(_this) {
           return function(errors) {
-            return _this._generateErrors($.parseJSON(errors.responseText), $form.parent().find(".errors", 'passwordResetError'));
+            return new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors", 'passwordResetError')).generateErrors();
           };
         })(this)
       });
@@ -298,7 +298,7 @@ define(['jquery', 'primedia_events', 'src/formatter', 'jquery.cookie'], function
               error = {
                 'password': data.error
               };
-              return _this._generateErrors(error, $form.parent().find(".errors", 'passwordConfirmSuccessError'));
+              return new ErrorHandler(error, $form.parent().find(".errors", 'passwordConfirmSuccessError')).generateErrors();
             } else {
               $form.parent().empty();
               events.trigger('event/passwordConfirmSuccess', data);
@@ -309,7 +309,7 @@ define(['jquery', 'primedia_events', 'src/formatter', 'jquery.cookie'], function
         })(this),
         error: (function(_this) {
           return function(errors) {
-            return _this._generateErrors($.parseJSON(errors.responseText), $form.parent().find(".errors", 'passwordConfirmError'));
+            return new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors", 'passwordConfirmError')).generateErrors();
           };
         })(this)
       });
@@ -338,52 +338,6 @@ define(['jquery', 'primedia_events', 'src/formatter', 'jquery.cookie'], function
       $form.prm_dialog_close();
       if (obj.redirectUrl) {
         return window.location.assign(obj.redirectUrl);
-      }
-    };
-
-    Login.prototype._generateErrors = function(error, $box, eventName) {
-      var $form, messages;
-      this._clearErrors($box.parent());
-      messages = '';
-      if (error != null) {
-        $form = $box.parent().find('form');
-        $.each(error, (function(_this) {
-          return function(key, value) {
-            var formattedError;
-            $form.find("#" + key).parent('p').addClass('error');
-            formattedError = _this._formatError(key, value);
-            messages += "<li>" + formattedError + "</li>";
-            return $form.find('.error input:first').focus();
-          };
-        })(this));
-      } else {
-        messages += "An error has occurred.";
-      }
-      $box.append("<ul>" + messages + "</ul>");
-      return events.trigger('event/' + eventName, error);
-    };
-
-    Login.prototype._formatError = function(key, value) {
-      var formatted_key;
-      switch (key) {
-        case "base":
-          return value;
-        case "auth_key":
-          if (value) {
-            return value;
-          } else {
-            return '';
-          }
-          break;
-        case "password_confirmation":
-          return "Password confirmation " + value;
-        default:
-          formatted_key = new Formatter(key).sentenceCase();
-          if (value) {
-            return formatted_key + " " + value;
-          } else {
-            return '';
-          }
       }
     };
 
@@ -463,7 +417,7 @@ define(['jquery', 'primedia_events', 'src/formatter', 'jquery.cookie'], function
     };
 
     Login.prototype._triggerModal = function($div) {
-      this._clearErrors($div);
+      new ErrorHandler()._clearErrors($div);
       $div.prm_dialog_open();
       if (this.options.prefillEmailInput && this.my.zmail) {
         $div.find('#email, #auth_key').val(this.my.zmail);
@@ -473,12 +427,6 @@ define(['jquery', 'primedia_events', 'src/formatter', 'jquery.cookie'], function
         return $div.prm_dialog_close();
       });
       return this.wireupSocialLinks($div);
-    };
-
-    Login.prototype._clearErrors = function($div) {
-      $div.find('form p').removeClass('error');
-      $div.find('.errors').empty();
-      return events.trigger('event/loginErrorsCleared');
     };
 
     Login.prototype._bindSocialLink = function($link, url, $div) {

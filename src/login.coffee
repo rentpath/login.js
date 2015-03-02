@@ -2,11 +2,13 @@ define [
   'jquery'
   'primedia_events'
   'src/formatter'
+  'src/error_handler'
   'jquery.cookie'
 ], (
   $
   events
   Formatter
+  ErrorHandler
 ) ->
   class Login
 
@@ -120,9 +122,9 @@ define [
             events.trigger('event/emailRegistrationSuccess', data)
             @_redirectOnSuccess data, $form
           else
-            @_generateErrors data, $form.parent().find(".errors"), 'emailRegistrationSuccessError'
+            new ErrorHandler(data, $form.parent().find(".errors"), 'emailRegistrationSuccessError').generateErrors()
         error: (errors) =>
-          @_generateErrors $.parseJSON(errors.responseText), $form.parent().find(".errors"), 'emailRegistrationError'
+          new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'emailRegistrationError').generateErrors()
 
     _submitLogin: ($form) ->
       @_setHiddenValues $form
@@ -142,9 +144,9 @@ define [
             events.trigger('event/loginSuccess', data)
             @_redirectOnSuccess data, $form
           else
-            @_generateErrors data, $form.parent().find(".errors"), 'loginSuccessError'
+            new ErrorHandler(data, $form.parent().find(".errors"), 'loginSuccessError').generateErrors()
         error: (errors) =>
-          @_generateErrors $.parseJSON(errors.responseText), $form.parent().find(".errors"), 'loginError'
+          new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'loginError').generateErrors()
 
     _submitChangeUserData: ($form)->
       user_data =
@@ -162,14 +164,14 @@ define [
           xhr.setRequestHeader "Accept", "application/json"
         success: (data) =>
           if data? and data.errors # IE8 XDR Fallback
-            @_generateErrors data.errors, $form.parent().find ".errors", 'changeEmailSuccessError'
+            new ErrorHandler(data.errors, $form.parent().find ".errors", 'changeEmailSuccessError').generateErrors()
           else
             @_setEmail(user_data.email)
             events.trigger('event/changeEmailSuccess', data)
             $('#zutron_account_form').prm_dialog_close()
             @_triggerModal $("#zutron_success_form")
         error: (errors) =>
-          @_generateErrors $.parseJSON(errors.responseText), $form.parent().find ".errors", 'changeEmailError'
+          new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find ".errors", 'changeEmailError').generateErrors()
 
     _submitPasswordReset: ($form) ->
       $.ajax
@@ -181,13 +183,13 @@ define [
         success: (data) =>
           if data.error # IE8 XDR Fallback
             error = {'email': data.error}
-            @_generateErrors(error, $form.parent().find(".errors"), 'passwordResetSuccessError')
+            new ErrorHandler(error, $form.parent().find(".errors"), 'passwordResetSuccessError').generateErrors()
           else
             $form.parent().empty()
             events.trigger('event/passwordResetSuccess', data)
             $('.reset_success').html(data.success).show()
         error: (errors) =>
-          @_generateErrors $.parseJSON(errors.responseText), $form.parent().find ".errors", 'passwordResetError'
+          new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find ".errors", 'passwordResetError').generateErrors()
 
     _submitPasswordConfirm: ($form) ->
       $.ajax
@@ -200,14 +202,14 @@ define [
         success: (data) =>
           if data? and data.error # IE8 XDR Fallback
             error = {'password': data.error}
-            @_generateErrors error, $form.parent().find ".errors", 'passwordConfirmSuccessError'
+            new ErrorHandler(error, $form.parent().find ".errors", 'passwordConfirmSuccessError').generateErrors()
           else
             $form.parent().empty()
             events.trigger('event/passwordConfirmSuccess', data)
             $('.reset_success').html(data.success).show()
             @_determineClient()
         error: (errors) =>
-          @_generateErrors $.parseJSON(errors.responseText), $form.parent().find ".errors", 'passwordConfirmError'
+          new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find ".errors", 'passwordConfirmError').generateErrors()
 
     _clearInputs: (formID) ->
       $inputs = $(formID + ' input[type="email"]').add $(formID + ' input[type="password"]')
@@ -224,31 +226,6 @@ define [
     _redirectOnSuccess: (obj, $form) ->
       $form.prm_dialog_close()
       window.location.assign obj.redirectUrl if obj.redirectUrl
-
-    _generateErrors: (error, $box, eventName) ->
-      @_clearErrors $box.parent()
-      messages = ''
-      if error?
-        $form = $box.parent().find 'form'
-        $.each error, (key, value) =>
-          $form.find("##{key}").parent('p').addClass 'error'
-          formattedError = @_formatError key, value
-          messages += "<li>#{formattedError}</li>"
-          $form.find('.error input:first').focus()
-      else
-        messages += "An error has occurred."
-      $box.append "<ul>#{messages}</ul>"
-      events.trigger('event/' + eventName, error)
-
-    _formatError: (key, value) ->
-      switch key
-        when "base" then value
-        when "auth_key"
-          if value then value else ''
-        when "password_confirmation" then "Password confirmation #{value}"
-        else
-          formatted_key = new Formatter(key).sentenceCase()
-          if value then "#{formatted_key} #{value}" else ''
 
     _toggleSessionState: ->
       if @my.session
@@ -302,18 +279,13 @@ define [
         @_triggerModal $div
 
     _triggerModal: ($div) =>
-      @_clearErrors $div
+      new ErrorHandler()._clearErrors $div
       $div.prm_dialog_open()
       $div.find('#email, #auth_key').val(@my.zmail) if @options.prefillEmailInput && @my.zmail
       $div.find(':input').filter(':visible:first').focus()
       $div.on "click", "a.close", ->
         $div.prm_dialog_close()
       @wireupSocialLinks $div
-
-    _clearErrors: ($div) ->
-      $div.find('form p').removeClass('error')
-      $div.find('.errors').empty()
-      events.trigger('event/loginErrorsCleared')
 
     _bindSocialLink: ($link, url, $div) ->
       $link.on "click", =>
