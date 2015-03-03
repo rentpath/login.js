@@ -7,7 +7,7 @@ define([], function() {
 
     Formatter.prototype.sentenceCase = function() {
       var new_string;
-      new_string = this.string.replace('_', ' ');
+      new_string = this.string.split('_').join(' ');
       return this.capitalize(new_string);
     };
 
