@@ -417,7 +417,7 @@ define(['jquery', 'primedia_events', 'src/error_handler', 'jquery.cookie'], func
     };
 
     Login.prototype._triggerModal = function($div) {
-      new ErrorHandler()._clearErrors($div);
+      new ErrorHandler().clearErrors($div);
       $div.prm_dialog_open();
       if (this.options.prefillEmailInput && this.my.zmail) {
         $div.find('#email, #auth_key').val(this.my.zmail);

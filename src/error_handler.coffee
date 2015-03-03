@@ -13,11 +13,11 @@ define [
     constructor: (@error, @$box, @eventName) ->
 
     generateErrors: () ->
-      @clearErrors()
+      @clearErrors(@$box.parent())
       messages = ''
-      if error?
+      if @error?
         $form = @$box.parent().find 'form'
-        $.each @error, (key, value) =>
+        for key, value of @error
           $form.find("##{key}").parent('p').addClass 'error'
           formattedError = @formatError key, value
           messages += "<li>#{formattedError}</li>"
@@ -25,8 +25,7 @@ define [
       else
         messages += "An error has occurred."
       @$box.append "<ul>#{messages}</ul>"
-      events.trigger('event/' + eventName, error)
-
+      events.trigger('event/' + @eventName, @error)
 
     formatError: (key, value) ->
       switch key

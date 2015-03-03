@@ -1,32 +1,31 @@
 define(['jquery', 'primedia_events', 'src/formatter', 'jquery.cookie'], function($, events, Formatter) {
   var ErrorHandler;
   return ErrorHandler = (function() {
-    function ErrorHandler(error1, $box, eventName1) {
-      this.error = error1;
+    function ErrorHandler(error, $box, eventName) {
+      this.error = error;
       this.$box = $box;
-      this.eventName = eventName1;
+      this.eventName = eventName;
     }
 
     ErrorHandler.prototype.generateErrors = function() {
-      var $form, messages;
-      this.clearErrors();
+      var $form, formattedError, key, messages, ref, value;
+      this.clearErrors(this.$box.parent());
       messages = '';
-      if (typeof error !== "undefined" && error !== null) {
+      if (this.error != null) {
         $form = this.$box.parent().find('form');
-        $.each(this.error, (function(_this) {
-          return function(key, value) {
-            var formattedError;
-            $form.find("#" + key).parent('p').addClass('error');
-            formattedError = _this.formatError(key, value);
-            messages += "<li>" + formattedError + "</li>";
-            return $form.find('.error input:first').focus();
-          };
-        })(this));
+        ref = this.error;
+        for (key in ref) {
+          value = ref[key];
+          $form.find("#" + key).parent('p').addClass('error');
+          formattedError = this.formatError(key, value);
+          messages += "<li>" + formattedError + "</li>";
+          $form.find('.error input:first').focus();
+        }
       } else {
         messages += "An error has occurred.";
       }
       this.$box.append("<ul>" + messages + "</ul>");
-      return events.trigger('event/' + eventName, error);
+      return events.trigger('event/' + this.eventName, this.error);
     };
 
     ErrorHandler.prototype.formatError = function(key, value) {

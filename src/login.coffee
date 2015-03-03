@@ -277,7 +277,7 @@ define [
         @_triggerModal $div
 
     _triggerModal: ($div) =>
-      new ErrorHandler()._clearErrors $div
+      new ErrorHandler().clearErrors $div
       $div.prm_dialog_open()
       $div.find('#email, #auth_key').val(@my.zmail) if @options.prefillEmailInput && @my.zmail
       $div.find(':input').filter(':visible:first').focus()
