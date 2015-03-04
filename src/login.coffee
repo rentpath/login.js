@@ -370,7 +370,7 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
 
     _setEmail: (email) ->
       @my.zmail = email
-      $.cookie 'zmail', email
+      $.cookie 'zmail', email, { path: '/' }
 
     _overrideDependencies: ->
       @MOBILE = window.location.host.match(/(^m\.|^local\.m\.)/)?

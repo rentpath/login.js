@@ -580,7 +580,9 @@
 
       Login.prototype._setEmail = function(email) {
         this.my.zmail = email;
-        return $.cookie('zmail', email);
+        return $.cookie('zmail', email, {
+          path: '/'
+        });
       };
 
       Login.prototype._overrideDependencies = function() {
