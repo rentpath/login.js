@@ -333,7 +333,7 @@ define ['jquery', 'primedia_events', 'jquery.cookie'], ($, events) ->
       all_cookies =  ["provider", "sgn", "zid", "z_type_email"]
       $.each all_cookies, (index, cookie) =>
         @expireCookie cookie
-      window.location.replace @my.currentUrl
+      window.location.reload(true)
 
     _redirectTo: (url) ->
       $.ajax

@@ -523,7 +523,7 @@
             return _this.expireCookie(cookie);
           };
         })(this));
-        return window.location.replace(this.my.currentUrl);
+        return window.location.reload(true);
       };
 
       Login.prototype._redirectTo = function(url) {
