@@ -17,6 +17,7 @@ require.config
     'jquery.cookie': 'vendor/bower/jquery.cookie/jquery.cookie'
     'primedia_events': 'vendor/bower/primedia_events/primedia-events'
     'jquery': 'vendor/bower/jquery/jquery'
+    'login': 'dist'
   }
 
   # dynamically load all test files

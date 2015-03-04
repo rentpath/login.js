@@ -23,7 +23,7 @@ module.exports = (config) ->
       {pattern: 'vendor/bower/primedia_events/**/*.js', watched: false, included: false}
 
       # Misc
-      {pattern: 'src/**/*.coffee', included: false}
+      {pattern: 'dist/*.js', included: false, served:true}
       {pattern: 'test/**/*_spec.coffee', included: false}
       {pattern: 'test/fixtures/*.html', watched: true, served: true, included: false}
       'test-main.coffee'

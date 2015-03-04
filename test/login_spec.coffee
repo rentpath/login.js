@@ -1,5 +1,5 @@
 define [
-  'src/login'
+  'login/login'
 ], (
   Login
 ) ->

@@ -1,5 +1,5 @@
 define [
-  'src/error_handler'
+  'login/error_handler'
   'primedia_events'
 ], (
   ErrorHandler

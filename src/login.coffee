@@ -1,7 +1,7 @@
 define [
   'jquery'
   'primedia_events'
-  'src/error_handler'
+  'login/error_handler'
   'jquery.cookie'
 ], (
   $

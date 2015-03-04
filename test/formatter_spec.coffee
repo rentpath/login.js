@@ -1,5 +1,5 @@
 define [
-  'src/formatter'
+  'login/formatter'
 ], (
   Formatter
 ) ->

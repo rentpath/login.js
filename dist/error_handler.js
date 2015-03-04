@@ -1,4 +1,4 @@
-define(['jquery', 'primedia_events', 'src/formatter', 'jquery.cookie'], function($, events, Formatter) {
+define(['jquery', 'primedia_events', 'login/formatter', 'jquery.cookie'], function($, events, Formatter) {
   var ErrorHandler;
   return ErrorHandler = (function() {
     function ErrorHandler(error, $box, eventName) {

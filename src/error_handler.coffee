@@ -1,7 +1,7 @@
 define [
   'jquery'
   'primedia_events'
-  'src/formatter'
+  'login/formatter'
   'jquery.cookie'
 ], (
   $
