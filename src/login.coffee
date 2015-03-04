@@ -305,7 +305,7 @@ define [
       all_cookies =  ["provider", "sgn", "zid", "z_type_email"]
       $.each all_cookies, (index, cookie) =>
         @expireCookie cookie
-      window.location.replace @my.currentUrl
+      window.location.reload(true)
 
     _redirectTo: (url) ->
       $.ajax
@@ -342,7 +342,7 @@ define [
 
     _setEmail: (email) ->
       @my.zmail = email
-      $.cookie 'zmail', email
+      $.cookie 'zmail', email, { path: '/' }
 
     _overrideDependencies: ->
       @MOBILE = window.location.host.match(/(^m\.|^local\.m\.)/)?

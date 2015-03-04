@@ -461,7 +461,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
           return _this.expireCookie(cookie);
         };
       })(this));
-      return window.location.replace(this.my.currentUrl);
+      return window.location.reload(true);
     };
 
     Login.prototype._redirectTo = function(url) {
@@ -518,7 +518,9 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
 
     Login.prototype._setEmail = function(email) {
       this.my.zmail = email;
-      return $.cookie('zmail', email);
+      return $.cookie('zmail', email, {
+        path: '/'
+      });
     };
 
     Login.prototype._overrideDependencies = function() {
