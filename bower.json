@@ -1,7 +1,11 @@
 {
   "name": "login",
-  "version": "0.2.28",
-  "main": "login.js",
+  "version": "0.2.29",
+  "main": [
+    "dist/login.js",
+    "dist/formatter.js",
+    "dist/error_handler.js"
+  ],
   "dependencies": {
     "jquery": "1.8.3",
     "primedia_events": "git@github.com:RentPath/primedia_events.js.git",
