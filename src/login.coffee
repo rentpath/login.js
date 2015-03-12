@@ -42,7 +42,8 @@ define [
         $.each @my.popupTypes, (index, type) =>
           @_bindForms type
 
-        $("a.logout").click (e) => @_logOut e
+        $(document).on 'click', 'a.logout', (e) =>
+          @_logOut e
 
     _prefillAccountName: ($div) ->
       $.ajax
