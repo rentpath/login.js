@@ -45,7 +45,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
           $.each(_this.my.popupTypes, function(index, type) {
             return _this._bindForms(type);
           });
-          return $("a.logout").click(function(e) {
+          return $(document).on('click', 'a.logout', function(e) {
             return _this._logOut(e);
           });
         };
