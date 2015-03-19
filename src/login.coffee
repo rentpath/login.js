@@ -10,6 +10,16 @@ define [
 ) ->
   class Login
 
+    #
+    # Note regarding Ajax response handling:
+    # IE (at least versions 8 and 9) only allows access to the response body
+    # of cross-domain requests when the response status is 200.
+    # In all use cases where we need to communicate specific errors back
+    # to the client, the server should return a 200 response that contains the
+    # error data in some identifiable way so that this code can determine which "successful"
+    # responses are in fact errors.
+    #
+
     hideIfLoggedInSelector:  '.js_hidden_if_logged_in'
     hideIfLoggedOutSelector: '.js_hidden_if_logged_out'
 
@@ -113,15 +123,15 @@ define [
           xhr.overrideMimeType "text/json"
           xhr.setRequestHeader "Accept", "application/json"
         success: (data) =>
-          if data['redirectUrl'] # IE8 XDR Fallback
+          if data['redirectUrl']
             @_stayOrLeave $form
             $("#zutron_login_form, #zutron_registration").prm_dialog_close()
             @_setSessionType()
             @_setEmail $form.find("#email").val()
             events.trigger('event/emailRegistrationSuccess', data)
             @_redirectOnSuccess data, $form
-          else
-            new ErrorHandler(data, $form.parent().find(".errors"), 'emailRegistrationSuccessError').generateErrors()
+          else # IE8 XDR Fallback
+            new ErrorHandler(data, $form.parent().find(".errors"), 'emailRegistrationError').generateErrors()
         error: (errors) =>
           new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'emailRegistrationError').generateErrors()
 
@@ -135,15 +145,15 @@ define [
           xhr.overrideMimeType "text/json"
           xhr.setRequestHeader "Accept", "application/json"
         success: (data) =>
-          if data['redirectUrl'] # IE8 XDR Fallback
+          if data['redirectUrl']
             @_stayOrLeave $form
             $("#zutron_login_form, #zutron_registration").prm_dialog_close()
             @_setSessionType()
             @_setEmail $form.find("#auth_key").val()
             events.trigger('event/loginSuccess', data)
             @_redirectOnSuccess data, $form
-          else
-            new ErrorHandler(data, $form.parent().find(".errors"), 'loginSuccessError').generateErrors()
+          else # IE8 XDR Fallback
+            new ErrorHandler(data, $form.parent().find(".errors"), 'loginError').generateErrors()
         error: (errors) =>
           new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'loginError').generateErrors()
 
@@ -163,7 +173,7 @@ define [
           xhr.setRequestHeader "Accept", "application/json"
         success: (data) =>
           if data? and data.errors # IE8 XDR Fallback
-            new ErrorHandler(data.errors, $form.parent().find ".errors", 'changeEmailSuccessError').generateErrors()
+            new ErrorHandler(data.errors, $form.parent().find ".errors", 'changeEmailError').generateErrors()
           else
             @_setEmail(user_data.email)
             events.trigger('event/changeEmailSuccess', data)
@@ -182,7 +192,7 @@ define [
         success: (data) =>
           if data.error # IE8 XDR Fallback
             error = {'email': data.error}
-            new ErrorHandler(error, $form.parent().find(".errors"), 'passwordResetSuccessError').generateErrors()
+            new ErrorHandler(error, $form.parent().find(".errors"), 'passwordResetError').generateErrors()
           else
             $form.parent().empty()
             events.trigger('event/passwordResetSuccess', data)
@@ -201,7 +211,7 @@ define [
         success: (data) =>
           if data? and data.error # IE8 XDR Fallback
             error = {'password': data.error}
-            new ErrorHandler(error, $form.parent().find ".errors", 'passwordConfirmSuccessError').generateErrors()
+            new ErrorHandler(error, $form.parent().find ".errors", 'passwordConfirmError').generateErrors()
           else
             $form.parent().empty()
             events.trigger('event/passwordConfirmSuccess', data)
