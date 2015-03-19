@@ -1,6 +1,6 @@
 {
   "name": "login",
-  "version": "0.2.30",
+  "version": "0.2.31",
   "main": [
     "dist/login.js",
     "dist/formatter.js",
