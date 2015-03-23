@@ -284,7 +284,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
 
     Login.prototype._submitPasswordConfirm = function($form) {
       return $.ajax({
-        type: 'POST',
+        type: 'GET',
         data: $form.serialize(),
         url: zutron_host + "/password_confirmation",
         beforeSend: function(xhr) {

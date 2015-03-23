@@ -202,7 +202,7 @@ define [
 
     _submitPasswordConfirm: ($form) ->
       $.ajax
-        type: 'POST'
+        type: 'GET' # Zutron loses params from IE POST for some reason
         data: $form.serialize()
         url: "#{zutron_host}/password_confirmation"
         beforeSend: (xhr) ->
