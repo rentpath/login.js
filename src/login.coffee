@@ -57,7 +57,7 @@ define [
 
     _prefillAccountName: ($div) ->
       $.ajax
-        type: "GET" # POST does not work in IE
+        type: "GET"
         datatype: 'json'
         url:  "#{zutron_host}/zids/#{@my.zid}/"
         beforeSend: (xhr) ->
