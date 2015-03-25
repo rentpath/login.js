@@ -145,3 +145,34 @@ define [
 
         it "toggles elements when logged out", ->
           expect(login._toggleElementsWhenLoggedOut).toHaveBeenCalled()
+
+    describe "#_prefillEmail", ->
+      describe "when prefillEmailInput option true (default)", ->
+        describe "when zmail", ->
+          beforeEach ->
+            login.my.zmail = sampleEmail
+
+          describe "when input empty", ->
+            it "sets input to zmail", ->
+              login._prefillEmail($('#zutron_login_form'))
+              expect($('#email').val()).toEqual(sampleEmail)
+
+          describe "when input not empty", ->
+            it "leaves input alone", ->
+              $('#email').val('foo')
+              login._prefillEmail($('#zutron_login_form'))
+              expect($('#email').val()).toEqual('foo')
+
+        describe "when not zmail", ->
+          beforeEach ->
+            login.my.zmail = null
+          it "leaves input alone", ->
+            login._prefillEmail($('#zutron_login_form'))
+            expect($('#email').val()).toEqual('')
+
+      describe "when prefillEmailInput option false", ->
+        it "leaves input alone", ->
+          login.options.prefillEmailInput = false
+          login.my.zmail = sampleEmail
+          login._prefillEmail($('#zutron_login_form'))
+          expect($('#email').val()).toEqual('')

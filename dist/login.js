@@ -70,6 +70,24 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
       });
     };
 
+    Login.prototype._prefillEmail = function($div) {
+      var i, input, len, ref, results, selector;
+      if (this.options.prefillEmailInput && this.my.zmail) {
+        ref = ['#email', '#auth_key'];
+        results = [];
+        for (i = 0, len = ref.length; i < len; i++) {
+          selector = ref[i];
+          input = $(selector);
+          if (!input.val()) {
+            results.push(input.val(this.my.zmail));
+          } else {
+            results.push(void 0);
+          }
+        }
+        return results;
+      }
+    };
+
     Login.prototype._encodeURL = function(href) {
       var hash, path, ref;
       ref = href.split('#'), path = ref[0], hash = ref[1];
@@ -397,31 +415,34 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     };
 
     Login.prototype._bindForms = function(type) {
-      var formID;
+      var $form, formID;
       formID = "#zutron_" + type + "_form";
-      if (this.MOBILE && $(formID).is(':visible')) {
-        this.wireupSocialLinks($(formID));
-        this._clearInputs(formID);
+      if (this.MOBILE) {
+        $form = $(formID);
+        if ($form.is(':visible')) {
+          this.wireupSocialLinks($form);
+          this._clearInputs(formID);
+          return this._prefillEmail($form);
+        }
+      } else {
+        return $("a." + type + ", a.js_" + type).click((function(_this) {
+          return function() {
+            var $div;
+            $('.prm_dialog').prm_dialog_close();
+            $div = $(formID);
+            if (type === 'account') {
+              _this._prefillAccountName($div);
+            }
+            return _this._triggerModal($div);
+          };
+        })(this));
       }
-      return $("a." + type + ", a.js_" + type).click((function(_this) {
-        return function() {
-          var $div;
-          $('.prm_dialog').prm_dialog_close();
-          $div = $(formID);
-          if (type === 'account') {
-            _this._prefillAccountName($div);
-          }
-          return _this._triggerModal($div);
-        };
-      })(this));
     };
 
     Login.prototype._triggerModal = function($div) {
       new ErrorHandler().clearErrors($div);
       $div.prm_dialog_open();
-      if (this.options.prefillEmailInput && this.my.zmail) {
-        $div.find('#email, #auth_key').val(this.my.zmail);
-      }
+      this._prefillEmail($div);
       $div.find(':input').filter(':visible:first').focus();
       $div.on("click", "a.close", function() {
         return $div.prm_dialog_close();
