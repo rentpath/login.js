@@ -57,7 +57,7 @@ define [
 
     _prefillAccountName: ($div) ->
       $.ajax
-        type: "GET" # POST does not work in IE
+        type: "GET"
         datatype: 'json'
         url:  "#{zutron_host}/zids/#{@my.zid}/"
         beforeSend: (xhr) ->
@@ -66,6 +66,12 @@ define [
         success: (data) =>
           $div.find('input[name="new_first_name"]').val(data.zid.user.first_name)
           $div.find('input[name="new_last_name"]').val(data.zid.user.last_name)
+
+    _prefillEmail: ($div) ->
+      if @options.prefillEmailInput && @my.zmail
+        for selector in ['#email', '#auth_key']
+          input = $(selector)
+          input.val(@my.zmail) unless input.val()
 
     _encodeURL: (href) ->
       [path, hash] = href.split('#')
@@ -277,20 +283,23 @@ define [
 
     _bindForms: (type) ->
       formID = "#zutron_#{type}_form"
-      # TODO move dependencies to bottom of page
-      if @MOBILE and $(formID).is(':visible')
-        @wireupSocialLinks $(formID)
-        @_clearInputs formID
-      $("a.#{type}, a.js_#{type}").click =>
-        $('.prm_dialog').prm_dialog_close()
-        $div = $(formID)
-        @_prefillAccountName($div) if type is 'account'
-        @_triggerModal $div
+      if @MOBILE
+        $form =  $(formID)
+        if $form.is(':visible')
+          @wireupSocialLinks $form
+          @_clearInputs formID
+          @_prefillEmail $form
+      else
+        $("a.#{type}, a.js_#{type}").click =>
+          $('.prm_dialog').prm_dialog_close()
+          $div = $(formID)
+          @_prefillAccountName($div) if type is 'account'
+          @_triggerModal $div
 
     _triggerModal: ($div) =>
       new ErrorHandler().clearErrors $div
       $div.prm_dialog_open()
-      $div.find('#email, #auth_key').val(@my.zmail) if @options.prefillEmailInput && @my.zmail
+      @_prefillEmail($div)
       $div.find(':input').filter(':visible:first').focus()
       $div.on "click", "a.close", ->
         $div.prm_dialog_close()
