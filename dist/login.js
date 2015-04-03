@@ -487,7 +487,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
 
     Login.prototype._redirectTo = function(url) {
       return $.ajax({
-        type: "get",
+        type: "GET",
         url: zutron_host + "/ops/heartbeat/riak",
         success: function() {
           return window.location.assign(url);
