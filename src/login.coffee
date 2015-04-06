@@ -179,14 +179,14 @@ define [
           xhr.setRequestHeader "Accept", "application/json"
         success: (data) =>
           if data? and data.errors # IE8 XDR Fallback
-            new ErrorHandler(data.errors, $form.parent().find ".errors", 'changeEmailError').generateErrors()
+            new ErrorHandler(data.errors, $form.parent().find(".errors"), 'changeEmailError').generateErrors()
           else
             @_setEmail(user_data.email)
             events.trigger('event/changeEmailSuccess', data)
             $('#zutron_account_form').prm_dialog_close()
             @_triggerModal $("#zutron_success_form")
         error: (errors) =>
-          new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find ".errors", 'changeEmailError').generateErrors()
+          new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'changeEmailError').generateErrors()
 
     _submitPasswordReset: ($form) ->
       $.ajax
@@ -204,7 +204,7 @@ define [
             events.trigger('event/passwordResetSuccess', data)
             $('.reset_success').html(data.success).show()
         error: (errors) =>
-          new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find ".errors", 'passwordResetError').generateErrors()
+          new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'passwordResetError').generateErrors()
 
     _submitPasswordConfirm: ($form) ->
       $.ajax
@@ -217,14 +217,14 @@ define [
         success: (data) =>
           if data? and data.error # IE8 XDR Fallback
             error = {'password': data.error}
-            new ErrorHandler(error, $form.parent().find ".errors", 'passwordConfirmError').generateErrors()
+            new ErrorHandler(error, $form.parent().find(".errors"), 'passwordConfirmError').generateErrors()
           else
             $form.parent().empty()
             events.trigger('event/passwordConfirmSuccess', data)
             $('.reset_success').html(data.success).show()
             @_determineClient()
         error: (errors) =>
-          new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find ".errors", 'passwordConfirmError').generateErrors()
+          new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'passwordConfirmError').generateErrors()
 
     _clearInputs: (formID) ->
       $inputs = $(formID + ' input[type="email"]').add $(formID + ' input[type="password"]')

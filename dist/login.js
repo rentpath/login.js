@@ -252,7 +252,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
         success: (function(_this) {
           return function(data) {
             if ((data != null) && data.errors) {
-              return new ErrorHandler(data.errors, $form.parent().find(".errors", 'changeEmailError')).generateErrors();
+              return new ErrorHandler(data.errors, $form.parent().find(".errors"), 'changeEmailError').generateErrors();
             } else {
               _this._setEmail(user_data.email);
               events.trigger('event/changeEmailSuccess', data);
@@ -263,7 +263,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
         })(this),
         error: (function(_this) {
           return function(errors) {
-            return new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors", 'changeEmailError')).generateErrors();
+            return new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'changeEmailError').generateErrors();
           };
         })(this)
       });
@@ -294,7 +294,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
         })(this),
         error: (function(_this) {
           return function(errors) {
-            return new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors", 'passwordResetError')).generateErrors();
+            return new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'passwordResetError').generateErrors();
           };
         })(this)
       });
@@ -316,7 +316,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
               error = {
                 'password': data.error
               };
-              return new ErrorHandler(error, $form.parent().find(".errors", 'passwordConfirmError')).generateErrors();
+              return new ErrorHandler(error, $form.parent().find(".errors"), 'passwordConfirmError').generateErrors();
             } else {
               $form.parent().empty();
               events.trigger('event/passwordConfirmSuccess', data);
@@ -327,7 +327,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
         })(this),
         error: (function(_this) {
           return function(errors) {
-            return new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors", 'passwordConfirmError')).generateErrors();
+            return new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'passwordConfirmError').generateErrors();
           };
         })(this)
       });
