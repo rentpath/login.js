@@ -140,6 +140,74 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
       }
     };
 
+    Login.prototype.saveUserData = function(data, successCallback, errorCallback) {
+      return $.ajax({
+        type: "GET",
+        data: data,
+        datatype: 'json',
+        url: zutron_host + "/zids/" + this.my.zid + "/email_change.json",
+        beforeSend: function(xhr) {
+          xhr.overrideMimeType("text/json");
+          return xhr.setRequestHeader("Accept", "application/json");
+        },
+        success: (function(_this) {
+          return function(response) {
+            if ((response != null) && response.errors) {
+              if (errorCallback) {
+                return errorCallback(response.errors);
+              }
+            } else {
+              _this._setEmail(data.email);
+              events.trigger('event/changeEmailSuccess', response);
+              if (successCallback) {
+                return successCallback(response);
+              }
+            }
+          };
+        })(this),
+        error: (function(_this) {
+          return function(errors) {
+            if (errorCallback) {
+              return errorCallback($.parseJSON(errors.responseText));
+            }
+          };
+        })(this)
+      });
+    };
+
+    Login.prototype.resetUserPassword = function(data, successCallback, errorCallback) {
+      return $.ajax({
+        type: 'POST',
+        data: data,
+        url: zutron_host + "/password_reset",
+        beforeSend: function(xhr) {
+          xhr.overrideMimeType("text/json");
+          return xhr.setRequestHeader("Accept", "application/json");
+        },
+        success: (function(_this) {
+          return function(response) {
+            if ((response != null) && response.errors) {
+              if (errorCallback) {
+                return errorCallback(response.errors);
+              }
+            } else {
+              events.trigger('event/passwordResetSuccess', data);
+              if (successCallback) {
+                return successCallback(response);
+              }
+            }
+          };
+        })(this),
+        error: (function(_this) {
+          return function(errors) {
+            if (errorCallback) {
+              return errorCallback($.parseJSON(errors.responseText));
+            }
+          };
+        })(this)
+      });
+    };
+
     Login.prototype._enableLoginRegistration = function() {
       $('#zutron_register_form form').submit((function(_this) {
         return function(e) {
@@ -233,71 +301,33 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     };
 
     Login.prototype._submitChangeUserData = function($form) {
-      var user_data;
+      var onError, onSuccess, user_data;
       user_data = {
         first_name: $('input[name="new_first_name"]').val(),
         last_name: $('input[name="new_last_name"]').val(),
         email: $('input[name="new_email"]').val(),
         email_confirmation: $('input[name="new_email_confirm"]').val()
       };
-      return $.ajax({
-        type: "GET",
-        data: user_data,
-        datatype: 'json',
-        url: zutron_host + "/zids/" + this.my.zid + "/email_change.json",
-        beforeSend: function(xhr) {
-          xhr.overrideMimeType("text/json");
-          return xhr.setRequestHeader("Accept", "application/json");
-        },
-        success: (function(_this) {
-          return function(data) {
-            if ((data != null) && data.errors) {
-              return new ErrorHandler(data.errors, $form.parent().find(".errors"), 'changeEmailError').generateErrors();
-            } else {
-              _this._setEmail(user_data.email);
-              events.trigger('event/changeEmailSuccess', data);
-              $('#zutron_account_form').prm_dialog_close();
-              return _this._triggerModal($("#zutron_success_form"));
-            }
-          };
-        })(this),
-        error: (function(_this) {
-          return function(errors) {
-            return new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'changeEmailError').generateErrors();
-          };
-        })(this)
-      });
+      onSuccess = function() {
+        $('#zutron_account_form').prm_dialog_close();
+        return this._triggerModal($("#zutron_success_form"));
+      };
+      onError = function(errors) {
+        return new ErrorHandler(errors, $form.parent().find(".errors"), 'changeEmailError').generateErrors();
+      };
+      return this.saveUserData(user_data, onSuccess, onError);
     };
 
     Login.prototype._submitPasswordReset = function($form) {
-      return $.ajax({
-        type: 'POST',
-        url: zutron_host + "/password_reset?" + ($form.serialize()),
-        beforeSend: function(xhr) {
-          xhr.overrideMimeType("text/json");
-          return xhr.setRequestHeader("Accept", "application/json");
-        },
-        success: (function(_this) {
-          return function(data) {
-            var error;
-            if (data.error) {
-              error = {
-                'email': data.error
-              };
-              return new ErrorHandler(error, $form.parent().find(".errors"), 'passwordResetError').generateErrors();
-            } else {
-              $form.parent().empty();
-              events.trigger('event/passwordResetSuccess', data);
-              return $('.reset_success').html(data.success).show();
-            }
-          };
-        })(this),
-        error: (function(_this) {
-          return function(errors) {
-            return new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'passwordResetError').generateErrors();
-          };
-        })(this)
-      });
+      var onError, onSuccess;
+      onSuccess = function(data) {
+        $form.parent().empty();
+        return $('.reset_success').html(data.success).show();
+      };
+      onError = function(errors) {
+        return new ErrorHandler(errors, $form.parent().find(".errors"), 'passwordResetError').generateErrors();
+      };
+      return this.resetUserPassword($form.serialize(), onSuccess, onError);
     };
 
     Login.prototype._submitPasswordConfirm = function($form) {
@@ -568,6 +598,12 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     },
     toggleRegistrationDiv: function(div) {
       return this.instance.toggleRegistrationDiv(div);
+    },
+    saveUserData: function() {
+      return this.instance.saveUserData.apply(this.instance, arguments);
+    },
+    resetUserPassword: function() {
+      return this.instance.resetUserPassword.apply(this.instance, arguments);
     },
     expireCookie: function() {
       return this.instance.expireCookie();
