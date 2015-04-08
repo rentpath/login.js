@@ -176,10 +176,12 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     };
 
     Login.prototype.resetUserPassword = function(data, successCallback, errorCallback) {
+      if (typeof data === 'object') {
+        data = $.param(data);
+      }
       return $.ajax({
         type: 'POST',
-        data: data,
-        url: zutron_host + "/password_reset",
+        url: zutron_host + "/password_reset?" + data,
         beforeSend: function(xhr) {
           xhr.overrideMimeType("text/json");
           return xhr.setRequestHeader("Accept", "application/json");

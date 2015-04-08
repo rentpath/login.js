@@ -127,10 +127,10 @@ define [
           errorCallback($.parseJSON(errors.responseText)) if errorCallback
 
     resetUserPassword: (data, successCallback, errorCallback) ->
+      data = $.param(data) if typeof data is 'object'
       $.ajax
         type: 'POST'
-        data: data
-        url: "#{zutron_host}/password_reset"
+        url: zutron_host + "/password_reset?" + data,
         beforeSend: (xhr) ->
           xhr.overrideMimeType "text/json"
           xhr.setRequestHeader "Accept", "application/json"
