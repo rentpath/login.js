@@ -342,7 +342,7 @@ define [
 
     _redirectTo: (url) ->
       $.ajax
-        type: "get"
+        type: "GET"
         url: zutron_host + "/ops/heartbeat/riak"
         success: ->
           window.location.assign url
