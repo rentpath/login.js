@@ -109,7 +109,7 @@ define [
 
     saveUserData: (data, successCallback, errorCallback) ->
       $.ajax
-        type: "GET" # POST does not work in IE
+        type: "POST"
         data: data
         datatype: 'json'
         url:  "#{zutron_host}/zids/#{@my.zid}/email_change.json"
@@ -222,7 +222,7 @@ define [
 
     _submitPasswordConfirm: ($form) ->
       $.ajax
-        type: 'GET' # Zutron loses params from IE POST for some reason
+        type: 'POST'
         data: $form.serialize()
         url: "#{zutron_host}/password_confirmation"
         beforeSend: (xhr) ->
