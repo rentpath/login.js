@@ -457,25 +457,26 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     Login.prototype._bindForms = function(type) {
       var $form, formID;
       formID = "#zutron_" + type + "_form";
+      $form = $(formID);
       if (this.MOBILE) {
-        $form = $(formID);
         if ($form.is(':visible')) {
           this.wireupSocialLinks($form);
           this._clearInputs(formID);
           return this._prefillEmail($form);
         }
       } else {
-        return $("a." + type + ", a.js_" + type).click((function(_this) {
+        $("a." + type + ", a.js_" + type).click((function(_this) {
           return function() {
-            var $div;
-            $('.prm_dialog').prm_dialog_close();
-            $div = $(formID);
+            $('.prm_dialog:visible').prm_dialog_close();
             if (type === 'account') {
-              _this._prefillAccountName($div);
+              _this._prefillAccountName($form);
             }
-            return _this._triggerModal($div);
+            return _this._triggerModal($form);
           };
         })(this));
+        return $form.on("click", "a.close", function() {
+          return $form.prm_dialog_close();
+        });
       }
     };
 
@@ -484,9 +485,6 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
       $div.prm_dialog_open();
       this._prefillEmail($div);
       $div.find(':input').filter(':visible:first').focus();
-      $div.on("click", "a.close", function() {
-        return $div.prm_dialog_close();
-      });
       return this.wireupSocialLinks($div);
     };
 
