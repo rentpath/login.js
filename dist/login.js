@@ -310,25 +310,33 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
         email: $('input[name="new_email"]').val(),
         email_confirmation: $('input[name="new_email_confirm"]').val()
       };
-      onSuccess = function() {
-        $('#zutron_account_form').prm_dialog_close();
-        return this._triggerModal($("#zutron_success_form"));
-      };
-      onError = function(errors) {
-        return new ErrorHandler(errors, $form.parent().find(".errors"), 'changeEmailError').generateErrors();
-      };
+      onSuccess = (function(_this) {
+        return function() {
+          $('#zutron_account_form').prm_dialog_close();
+          return _this._triggerModal($("#zutron_success_form"));
+        };
+      })(this);
+      onError = (function(_this) {
+        return function(errors) {
+          return new ErrorHandler(errors, $form.parent().find(".errors"), 'changeEmailError').generateErrors();
+        };
+      })(this);
       return this.saveUserData(user_data, onSuccess, onError);
     };
 
     Login.prototype._submitPasswordReset = function($form) {
       var onError, onSuccess;
-      onSuccess = function(data) {
-        $form.parent().empty();
-        return $('.reset_success').html(data.success).show();
-      };
-      onError = function(errors) {
-        return new ErrorHandler(errors, $form.parent().find(".errors"), 'passwordResetError').generateErrors();
-      };
+      onSuccess = (function(_this) {
+        return function(data) {
+          $form.parent().empty();
+          return $('.reset_success').html(data.success).show();
+        };
+      })(this);
+      onError = (function(_this) {
+        return function(errors) {
+          return new ErrorHandler(errors, $form.parent().find(".errors"), 'passwordResetError').generateErrors();
+        };
+      })(this);
       return this.resetUserPassword($form.serialize(), onSuccess, onError);
     };
 

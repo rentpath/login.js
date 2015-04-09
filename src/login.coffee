@@ -205,18 +205,18 @@ define [
         last_name: $('input[name="new_last_name"]').val()
         email: $('input[name="new_email"]').val()
         email_confirmation: $('input[name="new_email_confirm"]').val()
-      onSuccess = ->
+      onSuccess = =>
         $('#zutron_account_form').prm_dialog_close()
         @_triggerModal $("#zutron_success_form")
-      onError = (errors) ->
+      onError = (errors) =>
         new ErrorHandler(errors, $form.parent().find(".errors"), 'changeEmailError').generateErrors()
       @saveUserData(user_data, onSuccess, onError)
 
     _submitPasswordReset: ($form) ->
-      onSuccess = (data) ->
+      onSuccess = (data) =>
         $form.parent().empty()
         $('.reset_success').html(data.success).show()
-      onError = (errors)->
+      onError = (errors) =>
         new ErrorHandler(errors, $form.parent().find(".errors"), 'passwordResetError').generateErrors()
       @resetUserPassword($form.serialize(), onSuccess, onError)
 
