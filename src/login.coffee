@@ -283,26 +283,25 @@ define [
 
     _bindForms: (type) ->
       formID = "#zutron_#{type}_form"
+      $form  = $(formID)
       if @MOBILE
-        $form =  $(formID)
         if $form.is(':visible')
           @wireupSocialLinks $form
           @_clearInputs formID
           @_prefillEmail $form
       else
         $("a.#{type}, a.js_#{type}").click =>
-          $('.prm_dialog').prm_dialog_close()
-          $div = $(formID)
-          @_prefillAccountName($div) if type is 'account'
-          @_triggerModal $div
+          $('.prm_dialog:visible').prm_dialog_close()
+          @_prefillAccountName($form) if type is 'account'
+          @_triggerModal $form
+        $form.on "click", "a.close", ->
+          $form.prm_dialog_close()
 
     _triggerModal: ($div) =>
       new ErrorHandler().clearErrors $div
       $div.prm_dialog_open()
       @_prefillEmail($div)
       $div.find(':input').filter(':visible:first').focus()
-      $div.on "click", "a.close", ->
-        $div.prm_dialog_close()
       @wireupSocialLinks $div
 
     _bindSocialLink: ($link, url, $div) ->
