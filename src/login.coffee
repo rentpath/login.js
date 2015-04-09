@@ -107,6 +107,42 @@ define [
         @_triggerModal element if $.cookie("user_type") is "new"
         @expireCookie "user_type"
 
+    saveUserData: (data, successCallback, errorCallback) ->
+      $.ajax
+        type: "GET" # POST does not work in IE
+        data: data
+        datatype: 'json'
+        url:  "#{zutron_host}/zids/#{@my.zid}/email_change.json"
+        beforeSend: (xhr) ->
+          xhr.overrideMimeType "text/json"
+          xhr.setRequestHeader "Accept", "application/json"
+        success: (response) =>
+          if response? and response.errors # IE8 XDR Fallback
+            errorCallback(response.errors) if errorCallback
+          else
+            @_setEmail(data.email)
+            events.trigger('event/changeEmailSuccess', response)
+            successCallback(response) if successCallback
+        error: (errors) =>
+          errorCallback($.parseJSON(errors.responseText)) if errorCallback
+
+    resetUserPassword: (data, successCallback, errorCallback) ->
+      data = $.param(data) if typeof data is 'object'
+      $.ajax
+        type: 'POST'
+        url: zutron_host + "/password_reset?" + data,
+        beforeSend: (xhr) ->
+          xhr.overrideMimeType "text/json"
+          xhr.setRequestHeader "Accept", "application/json"
+        success: (response) =>
+          if response? and response.errors # IE8 XDR Fallback
+            errorCallback(response.errors) if errorCallback
+          else
+            events.trigger('event/passwordResetSuccess', data)
+            successCallback(response) if successCallback
+        error: (errors) =>
+          errorCallback($.parseJSON(errors.responseText)) if errorCallback
+
     _enableLoginRegistration: =>
       $('#zutron_register_form form').submit (e) =>
         @_submitEmailRegistration $(e.target)
@@ -169,42 +205,20 @@ define [
         last_name: $('input[name="new_last_name"]').val()
         email: $('input[name="new_email"]').val()
         email_confirmation: $('input[name="new_email_confirm"]').val()
-      $.ajax
-        type: "GET" # POST does not work in IE
-        data: user_data
-        datatype: 'json'
-        url:  "#{zutron_host}/zids/#{@my.zid}/email_change.json"
-        beforeSend: (xhr) ->
-          xhr.overrideMimeType "text/json"
-          xhr.setRequestHeader "Accept", "application/json"
-        success: (data) =>
-          if data? and data.errors # IE8 XDR Fallback
-            new ErrorHandler(data.errors, $form.parent().find(".errors"), 'changeEmailError').generateErrors()
-          else
-            @_setEmail(user_data.email)
-            events.trigger('event/changeEmailSuccess', data)
-            $('#zutron_account_form').prm_dialog_close()
-            @_triggerModal $("#zutron_success_form")
-        error: (errors) =>
-          new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'changeEmailError').generateErrors()
+      onSuccess = =>
+        $('#zutron_account_form').prm_dialog_close()
+        @_triggerModal $("#zutron_success_form")
+      onError = (errors) =>
+        new ErrorHandler(errors, $form.parent().find(".errors"), 'changeEmailError').generateErrors()
+      @saveUserData(user_data, onSuccess, onError)
 
     _submitPasswordReset: ($form) ->
-      $.ajax
-        type: 'POST'
-        url: "#{zutron_host}/password_reset?#{$form.serialize()}"
-        beforeSend: (xhr) ->
-          xhr.overrideMimeType "text/json"
-          xhr.setRequestHeader "Accept", "application/json"
-        success: (data) =>
-          if data.error # IE8 XDR Fallback
-            error = {'email': data.error}
-            new ErrorHandler(error, $form.parent().find(".errors"), 'passwordResetError').generateErrors()
-          else
-            $form.parent().empty()
-            events.trigger('event/passwordResetSuccess', data)
-            $('.reset_success').html(data.success).show()
-        error: (errors) =>
-          new ErrorHandler($.parseJSON(errors.responseText), $form.parent().find(".errors"), 'passwordResetError').generateErrors()
+      onSuccess = (data) =>
+        $form.parent().empty()
+        $('.reset_success').html(data.success).show()
+      onError = (errors) =>
+        new ErrorHandler(errors, $form.parent().find(".errors"), 'passwordResetError').generateErrors()
+      @resetUserPassword($form.serialize(), onSuccess, onError)
 
     _submitPasswordConfirm: ($form) ->
       $.ajax
@@ -374,5 +388,7 @@ define [
   init: (options = {}) -> @instance = new Login(options)
   wireupSocialLinks: -> @instance.wireupSocialLinks()
   toggleRegistrationDiv: (div) -> @instance.toggleRegistrationDiv(div)
+  saveUserData: -> @instance.saveUserData.apply(@instance, arguments)
+  resetUserPassword: -> @instance.resetUserPassword.apply(@instance, arguments)
   expireCookie: -> @instance.expireCookie()
   session: -> @instance.my.session
