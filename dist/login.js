@@ -142,7 +142,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
 
     Login.prototype.saveUserData = function(data, successCallback, errorCallback) {
       return $.ajax({
-        type: "GET",
+        type: "POST",
         data: data,
         datatype: 'json',
         url: zutron_host + "/zids/" + this.my.zid + "/email_change.json",
@@ -342,7 +342,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
 
     Login.prototype._submitPasswordConfirm = function($form) {
       return $.ajax({
-        type: 'GET',
+        type: 'POST',
         data: $form.serialize(),
         url: zutron_host + "/password_confirmation",
         beforeSend: function(xhr) {
@@ -525,7 +525,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
 
     Login.prototype._redirectTo = function(url) {
       return $.ajax({
-        type: "get",
+        type: "GET",
         url: zutron_host + "/ops/heartbeat/riak",
         success: function() {
           return window.location.assign(url);
