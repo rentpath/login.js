@@ -41,10 +41,10 @@ define [
         currentUrl: window.location.href
         popupTypes: ["login", "register", "account", "reset", "confirm", "success"]
 
-      $(document).ready =>
-        $('body').bind 'new_zid_obtained', =>
-          @my.zid = $.cookie 'zid'
+      $(document).on 'new_zid_obtained', =>
+        @my.zid = $.cookie 'zid'
 
+      $(document).ready =>
         @_welcomeMessage()
         @_toggleSessionState()
         @_enableLoginRegistration()
