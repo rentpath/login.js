@@ -34,11 +34,13 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
         currentUrl: window.location.href,
         popupTypes: ["login", "register", "account", "reset", "confirm", "success"]
       };
+      $(document).on('new_zid_obtained', (function(_this) {
+        return function() {
+          return _this.my.zid = $.cookie('zid');
+        };
+      })(this));
       $(document).ready((function(_this) {
         return function() {
-          $('body').bind('new_zid_obtained', function() {
-            return _this.my.zid = $.cookie('zid');
-          });
           _this._welcomeMessage();
           _this._toggleSessionState();
           _this._enableLoginRegistration();
