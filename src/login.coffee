@@ -171,6 +171,7 @@ define [
             @_setSessionType()
             @_setEmail $form.find("#email").val()
             events.trigger('event/emailRegistrationSuccess', data)
+            $(document).trigger('emailRegistrationSuccess', data)
             @_redirectOnSuccess data, $form
           else # IE8 XDR Fallback
             new ErrorHandler(data, $form.parent().find(".errors"), 'emailRegistrationError').generateErrors()
