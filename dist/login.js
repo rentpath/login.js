@@ -258,6 +258,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
               _this._setSessionType();
               _this._setEmail($form.find("#email").val());
               events.trigger('event/emailRegistrationSuccess', data);
+              $(document).trigger('emailRegistrationSuccess', data);
               return _this._redirectOnSuccess(data, $form);
             } else {
               return new ErrorHandler(data, $form.parent().find(".errors"), 'emailRegistrationError').generateErrors();
