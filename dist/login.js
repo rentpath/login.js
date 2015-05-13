@@ -529,7 +529,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     Login.prototype._redirectTo = function(url) {
       return $.ajax({
         type: "GET",
-        url: zutron_host + "/ops/heartbeat/riak",
+        url: zutron_host + "/ops/heartbeat",
         success: function() {
           return window.location.assign(url);
         },

@@ -344,7 +344,7 @@ define [
     _redirectTo: (url) ->
       $.ajax
         type: "GET"
-        url: zutron_host + "/ops/heartbeat/riak"
+        url: zutron_host + "/ops/heartbeat"
         success: ->
           window.location.assign url
         error: =>
