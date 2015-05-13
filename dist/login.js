@@ -14,18 +14,10 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     };
 
     function Login(options) {
-      var key, value;
-      if (options == null) {
-        options = {};
-      }
       this._triggerModal = bind(this._triggerModal, this);
       this._submitEmailRegistration = bind(this._submitEmailRegistration, this);
       this._enableLoginRegistration = bind(this._enableLoginRegistration, this);
-      this.options = {};
-      for (key in DEFAULT_OPTIONS) {
-        value = DEFAULT_OPTIONS[key];
-        this.options[key] = options[key] != null ? options[key] : value;
-      }
+      this.options = $.extend({}, DEFAULT_OPTIONS, options);
       this._overrideDependencies();
       this.my = {
         zmail: $.cookie('zmail'),
@@ -122,7 +114,11 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
 
     Login.prototype.wireupSocialLinks = function($div) {
       var baseUrl, fbLink, googleLink, twitterLink;
-      baseUrl = zutron_host + "?zid_id=" + this.my.zid + "&referrer=" + (encodeURIComponent(this.my.currentUrl)) + "&technique=";
+      baseUrl = zutron_host + "?zid_id=" + this.my.zid + "&referrer=" + (encodeURIComponent(this.my.currentUrl));
+      if (this.options.realm) {
+        baseUrl += "&realm=" + this.options.realm;
+      }
+      baseUrl += '&technique=';
       fbLink = $div.find("a.icon_facebook48");
       twitterLink = $div.find("a.icon_twitter48");
       googleLink = $div.find("a.icon_google_plus48");

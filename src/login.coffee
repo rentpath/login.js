@@ -27,11 +27,8 @@ define [
       prefillEmailInput: true
     }
 
-    constructor: (options = {}) ->
-      @options = {}
-      for key, value of DEFAULT_OPTIONS
-        @options[key] = if options[key]? then options[key] else value
-
+    constructor: (options) ->
+      @options = $.extend({}, DEFAULT_OPTIONS, options)
       @_overrideDependencies()
 
       @my =
@@ -93,7 +90,9 @@ define [
         $.cookie cookie, "", options
 
     wireupSocialLinks: ($div) ->
-      baseUrl = "#{zutron_host}?zid_id=#{@my.zid}&referrer=#{encodeURIComponent(@my.currentUrl)}&technique="
+      baseUrl = "#{zutron_host}?zid_id=#{@my.zid}&referrer=#{encodeURIComponent(@my.currentUrl)}"
+      baseUrl += "&realm=#{@options.realm}" if @options.realm
+      baseUrl += '&technique='
       fbLink = $div.find("a.icon_facebook48")
       twitterLink = $div.find("a.icon_twitter48")
       googleLink = $div.find("a.icon_google_plus48")
