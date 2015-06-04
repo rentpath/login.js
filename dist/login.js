@@ -476,11 +476,11 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
             return _this._triggerModal($form);
           };
         })(this));
-        $("a." + type + ", a.js_" + type).click((function(_this) {
-          return function() {
-            return $(document).trigger(showEvent);
-          };
-        })(this));
+        $("a." + type + ", a.js_" + type).click(function() {
+          return $(document).trigger($.Event(showEvent, {
+            relatedTarget: this
+          }));
+        });
         return $form.on("click", "a.close", function() {
           return $form.prm_dialog_close();
         });

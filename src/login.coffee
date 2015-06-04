@@ -311,8 +311,8 @@ define [
           $('.prm_dialog:visible').prm_dialog_close()
           @_prefillAccountName($form) if type is 'account'
           @_triggerModal $form
-        $("a.#{type}, a.js_#{type}").click =>
-          $(document).trigger showEvent
+        $("a.#{type}, a.js_#{type}").click ->
+          $(document).trigger $.Event(showEvent, relatedTarget: @)
         $form.on "click", "a.close", ->
           $form.prm_dialog_close()
 
