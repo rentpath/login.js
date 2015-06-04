@@ -10,7 +10,8 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     Login.prototype.hideIfLoggedOutSelector = '.js_hidden_if_logged_out';
 
     DEFAULT_OPTIONS = {
-      prefillEmailInput: true
+      prefillEmailInput: true,
+      showDialogEventTemplate: 'uiShow{type}Dialog'
     };
 
     function Login(options) {
@@ -454,7 +455,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     };
 
     Login.prototype._bindForms = function(type) {
-      var $form, formID;
+      var $form, eventType, formID, showEvent;
       formID = "#zutron_" + type + "_form";
       $form = $(formID);
       if (this.MOBILE) {
@@ -464,13 +465,20 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
           return this._prefillEmail($form);
         }
       } else {
-        $("a." + type + ", a.js_" + type).click((function(_this) {
+        eventType = type.charAt(0).toUpperCase() + type.slice(1);
+        showEvent = this.options.showDialogEventTemplate.replace('{type}', eventType);
+        $(document).on(showEvent, (function(_this) {
           return function() {
             $('.prm_dialog:visible').prm_dialog_close();
             if (type === 'account') {
               _this._prefillAccountName($form);
             }
             return _this._triggerModal($form);
+          };
+        })(this));
+        $("a." + type + ", a.js_" + type).click((function(_this) {
+          return function() {
+            return $(document).trigger(showEvent);
           };
         })(this));
         return $form.on("click", "a.close", function() {
