@@ -25,6 +25,7 @@ define [
 
     DEFAULT_OPTIONS = {
       prefillEmailInput: true
+      showDialogEventTemplate: 'uiShow{type}Dialog'
     }
 
     constructor: (options) ->
@@ -304,10 +305,14 @@ define [
           @_clearInputs formID
           @_prefillEmail $form
       else
-        $("a.#{type}, a.js_#{type}").click =>
+        eventType = type.charAt(0).toUpperCase() + type.slice(1)
+        showEvent = @options.showDialogEventTemplate.replace('{type}', eventType)
+        $(document).on showEvent, =>
           $('.prm_dialog:visible').prm_dialog_close()
           @_prefillAccountName($form) if type is 'account'
           @_triggerModal $form
+        $("a.#{type}, a.js_#{type}").click ->
+          $(document).trigger $.Event(showEvent, relatedTarget: @)
         $form.on "click", "a.close", ->
           $form.prm_dialog_close()
 
