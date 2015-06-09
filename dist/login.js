@@ -11,7 +11,8 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
 
     DEFAULT_OPTIONS = {
       prefillEmailInput: true,
-      showDialogEventTemplate: 'uiShow{type}Dialog'
+      showDialogEventTemplate: 'uiShow{type}Dialog',
+      redirectOnLogin: true
     };
 
     function Login(options) {
@@ -251,12 +252,16 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
           return function(data) {
             if (data['redirectUrl']) {
               _this._stayOrLeave($form);
-              $("#zutron_login_form, #zutron_registration").prm_dialog_close();
+              if (_this.options.redirectOnLogin) {
+                $("#zutron_login_form, #zutron_registration").prm_dialog_close();
+              }
               _this._setSessionType();
               _this._setEmail($form.find("#email").val());
               events.trigger('event/emailRegistrationSuccess', data);
               $(document).trigger('emailRegistrationSuccess', data);
-              return _this._redirectOnSuccess(data, $form);
+              if (_this.options.redirectOnLogin) {
+                return _this._redirectOnSuccess(data, $form);
+              }
             } else {
               return new ErrorHandler(data, $form.parent().find(".errors"), 'emailRegistrationError').generateErrors();
             }
@@ -284,11 +289,15 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
           return function(data) {
             if (data['redirectUrl']) {
               _this._stayOrLeave($form);
-              $("#zutron_login_form, #zutron_registration").prm_dialog_close();
+              if (_this.options.redirectOnLogin) {
+                $("#zutron_login_form, #zutron_registration").prm_dialog_close();
+              }
               _this._setSessionType();
               _this._setEmail($form.find("#auth_key").val());
               events.trigger('event/loginSuccess', data);
-              return _this._redirectOnSuccess(data, $form);
+              if (_this.options.redirectOnLogin) {
+                return _this._redirectOnSuccess(data, $form);
+              }
             } else {
               return new ErrorHandler(data, $form.parent().find(".errors"), 'loginError').generateErrors();
             }
