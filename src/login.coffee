@@ -168,12 +168,12 @@ define [
         success: (data) =>
           if data['redirectUrl']
             @_stayOrLeave $form
-            $("#zutron_login_form, #zutron_registration").prm_dialog_close() if this.options.redirectOnLogin
+            $("#zutron_login_form, #zutron_registration").prm_dialog_close() if @options.redirectOnLogin
             @_setSessionType()
             @_setEmail $form.find("#email").val()
             events.trigger('event/emailRegistrationSuccess', data)
             $(document).trigger('emailRegistrationSuccess', data)
-            @_redirectOnSuccess data, $form if this.options.redirectOnLogin
+            @_redirectOnSuccess data, $form if @options.redirectOnLogin
           else # IE8 XDR Fallback
             new ErrorHandler(data, $form.parent().find(".errors"), 'emailRegistrationError').generateErrors()
         error: (errors) =>
@@ -191,11 +191,11 @@ define [
         success: (data) =>
           if data['redirectUrl']
             @_stayOrLeave $form
-            $("#zutron_login_form, #zutron_registration").prm_dialog_close() if this.options.redirectOnLogin
+            $("#zutron_login_form, #zutron_registration").prm_dialog_close() if @options.redirectOnLogin
             @_setSessionType()
             @_setEmail $form.find("#auth_key").val()
             events.trigger('event/loginSuccess', data)
-            @_redirectOnSuccess data, $form if this.options.redirectOnLogin
+            @_redirectOnSuccess data, $form if @options.redirectOnLogin
           else # IE8 XDR Fallback
             new ErrorHandler(data, $form.parent().find(".errors"), 'loginError').generateErrors()
         error: (errors) =>
