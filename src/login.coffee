@@ -142,7 +142,7 @@ define [
             events.trigger('event/passwordResetSuccess', data)
             successCallback(response) if successCallback
         error: (errors) =>
-          errorCallback($.parseJSON(errors.responseText)) if errorCallback
+          errorCallback($.parseJSON(errors.responseText).errors) if errorCallback
 
     _enableLoginRegistration: =>
       $('#zutron_register_form form').submit (e) =>

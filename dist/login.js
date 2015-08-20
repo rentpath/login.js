@@ -203,7 +203,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
         error: (function(_this) {
           return function(errors) {
             if (errorCallback) {
-              return errorCallback($.parseJSON(errors.responseText));
+              return errorCallback($.parseJSON(errors.responseText).errors);
             }
           };
         })(this)
