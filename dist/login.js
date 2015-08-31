@@ -137,10 +137,10 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
           this._triggerModal(element);
         }
         this.expireCookie("user_type");
+        return $('a.close').on("click", function() {
+          return element.prm_dialog_close();
+        });
       }
-      return $('a.close').on("click", function() {
-        return element.prm_dialog_close();
-      });
     };
 
     Login.prototype.saveUserData = function(data, successCallback, errorCallback) {
