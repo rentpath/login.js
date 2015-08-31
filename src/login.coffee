@@ -107,6 +107,8 @@ define [
       if element.length > 0
         @_triggerModal element if $.cookie("user_type") is "new"
         @expireCookie "user_type"
+        $('a.close').on "click", ->
+          element.prm_dialog_close()
 
     saveUserData: (data, successCallback, errorCallback) ->
       $.ajax

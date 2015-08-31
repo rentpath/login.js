@@ -136,7 +136,10 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
         if ($.cookie("user_type") === "new") {
           this._triggerModal(element);
         }
-        return this.expireCookie("user_type");
+        this.expireCookie("user_type");
+        return $('a.close').on("click", function() {
+          return element.prm_dialog_close();
+        });
       }
     };
 
