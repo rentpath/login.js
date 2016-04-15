@@ -444,6 +444,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
       $logLink.each(function() {
         return this.className = "logout " + this.className;
       });
+      $("a.logout").attr('data-tag_item', 'log_out');
       $logLink.removeClass("login");
       return $('.link_text', $logLink).text('Log Out');
     };
