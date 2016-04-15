@@ -285,6 +285,7 @@ define [
       # Add class to beginning to ensure it's picked up by autotagging
       $logLink.each ->
         @className = "logout #{@className}"
+      $("a.logout").attr('data-tag_item', 'log_out')
       $logLink.removeClass("login")
       $('.link_text',$logLink).text('Log Out')
 
