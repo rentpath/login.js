@@ -12,7 +12,8 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     DEFAULT_OPTIONS = {
       prefillEmailInput: true,
       showDialogEventTemplate: 'uiShow{type}Dialog',
-      redirectOnLogin: true
+      redirectOnLogin: true,
+      redirectUrl: null
     };
 
     function Login(options) {
@@ -115,8 +116,9 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     };
 
     Login.prototype.wireupSocialLinks = function($div) {
-      var baseUrl, fbLink, googleLink, twitterLink;
-      baseUrl = zutron_host + "?zid_id=" + this.my.zid + "&referrer=" + (encodeURIComponent(this.my.currentUrl));
+      var baseUrl, fbLink, googleLink, referrer, twitterLink;
+      referrer = this.options.redirectUrl || this.my.currentUrl;
+      baseUrl = zutron_host + "?zid_id=" + this.my.zid + "&referrer=" + (encodeURIComponent(referrer));
       if (this.options.realm) {
         baseUrl += "&realm=" + this.options.realm;
       }
@@ -211,6 +213,10 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
           };
         })(this)
       });
+    };
+
+    Login.prototype.setRedirectUrl = function(url) {
+      return this.options.redirectUrl = url;
     };
 
     Login.prototype._enableLoginRegistration = function() {
@@ -405,9 +411,11 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     };
 
     Login.prototype._redirectOnSuccess = function(obj, $form) {
+      var url;
       $form.prm_dialog_close();
-      if (obj.redirectUrl) {
-        return window.location.assign(obj.redirectUrl);
+      url = this.options.redirectUrl || obj.redirectUrl;
+      if (url) {
+        return window.location.assign(url);
       }
     };
 
@@ -638,6 +646,9 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     },
     session: function() {
       return this.instance.my.session;
+    },
+    setRedirectUrl: function(url) {
+      return this.instance.setRedirectUrl(url);
     }
   };
 });

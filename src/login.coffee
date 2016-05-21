@@ -27,6 +27,7 @@ define [
       prefillEmailInput: true
       showDialogEventTemplate: 'uiShow{type}Dialog'
       redirectOnLogin: true
+      redirectUrl: null
     }
 
     constructor: (options) ->
@@ -92,7 +93,8 @@ define [
         $.cookie cookie, "", options
 
     wireupSocialLinks: ($div) ->
-      baseUrl = "#{zutron_host}?zid_id=#{@my.zid}&referrer=#{encodeURIComponent(@my.currentUrl)}"
+      referrer = @options.redirectUrl || @my.currentUrl
+      baseUrl = "#{zutron_host}?zid_id=#{@my.zid}&referrer=#{encodeURIComponent(referrer)}"
       baseUrl += "&realm=#{@options.realm}" if @options.realm
       baseUrl += '&technique='
       fbLink = $div.find("a.icon_facebook48")
@@ -145,6 +147,9 @@ define [
             successCallback(response) if successCallback
         error: (errors) =>
           errorCallback($.parseJSON(errors.responseText).errors) if errorCallback
+
+    setRedirectUrl: (url) ->
+      @options.redirectUrl = url
 
     _enableLoginRegistration: =>
       $('#zutron_register_form form').submit (e) =>
@@ -258,7 +263,8 @@ define [
 
     _redirectOnSuccess: (obj, $form) ->
       $form.prm_dialog_close()
-      window.location.assign obj.redirectUrl if obj.redirectUrl
+      url = @options.redirectUrl || obj.redirectUrl
+      window.location.assign url if url
 
     _toggleSessionState: ->
       if @my.session
@@ -400,3 +406,4 @@ define [
   resetUserPassword: -> @instance.resetUserPassword.apply(@instance, arguments)
   expireCookie: -> @instance.expireCookie()
   session: -> @instance.my.session
+  setRedirectUrl: (url) -> @instance.setRedirectUrl(url)
