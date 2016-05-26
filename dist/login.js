@@ -12,8 +12,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     DEFAULT_OPTIONS = {
       prefillEmailInput: true,
       showDialogEventTemplate: 'uiShow{type}Dialog',
-      redirectOnLogin: true,
-      redirectUrl: null
+      redirectOnLogin: true
     };
 
     function Login(options) {
@@ -116,9 +115,8 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     };
 
     Login.prototype.wireupSocialLinks = function($div) {
-      var baseUrl, fbLink, googleLink, referrer, twitterLink;
-      referrer = this.options.redirectUrl || this.my.currentUrl;
-      baseUrl = zutron_host + "?zid_id=" + this.my.zid + "&referrer=" + (encodeURIComponent(referrer));
+      var baseUrl, fbLink, googleLink, twitterLink;
+      baseUrl = zutron_host + "?zid_id=" + this.my.zid + "&referrer=" + (encodeURIComponent(this.my.currentUrl));
       if (this.options.realm) {
         baseUrl += "&realm=" + this.options.realm;
       }
@@ -215,8 +213,8 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
       });
     };
 
-    Login.prototype.setRedirectUrl = function(url) {
-      return this.options.redirectUrl = url;
+    Login.prototype.setRedirectOnLogin = function(value) {
+      return this.options.redirectOnLogin = value;
     };
 
     Login.prototype._enableLoginRegistration = function() {
@@ -411,11 +409,9 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     };
 
     Login.prototype._redirectOnSuccess = function(obj, $form) {
-      var url;
       $form.prm_dialog_close();
-      url = this.options.redirectUrl || obj.redirectUrl;
-      if (url) {
-        return window.location.assign(url);
+      if (obj.redirectUrl) {
+        return window.location.assign(obj.redirectUrl);
       }
     };
 
@@ -647,8 +643,8 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     session: function() {
       return this.instance.my.session;
     },
-    setRedirectUrl: function(url) {
-      return this.instance.setRedirectUrl(url);
+    setRedirectOnLogin: function(value) {
+      return this.instance.setRedirectOnLogin(value);
     }
   };
 });
