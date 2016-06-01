@@ -12,7 +12,8 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     DEFAULT_OPTIONS = {
       prefillEmailInput: true,
       showDialogEventTemplate: 'uiShow{type}Dialog',
-      redirectOnLogin: true
+      redirectOnLogin: true,
+      referrerUrl: null
     };
 
     function Login(options) {
@@ -115,8 +116,9 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     };
 
     Login.prototype.wireupSocialLinks = function($div) {
-      var baseUrl, fbLink, googleLink, twitterLink;
-      baseUrl = zutron_host + "?zid_id=" + this.my.zid + "&referrer=" + (encodeURIComponent(this.my.currentUrl));
+      var baseUrl, fbLink, googleLink, twitterLink, url;
+      url = this.options.referrerUrl || this.my.currentUrl;
+      baseUrl = zutron_host + "?zid_id=" + this.my.zid + "&referrer=" + (encodeURIComponent(url));
       if (this.options.realm) {
         baseUrl += "&realm=" + this.options.realm;
       }
@@ -215,6 +217,10 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
 
     Login.prototype.setRedirectOnLogin = function(value) {
       return this.options.redirectOnLogin = value;
+    };
+
+    Login.prototype.setReferrerUrl = function(url) {
+      return this.options.referrerUrl = url;
     };
 
     Login.prototype._enableLoginRegistration = function() {
@@ -566,7 +572,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
 
     Login.prototype._setHiddenValues = function($form) {
       $form.find("input#state").val(this.my.zid);
-      return $form.find("input#origin").val(this._encodeURL(window.location.href));
+      return $form.find("input#origin").val(this._encodeURL(this.options.referrerUrl || this.my.currentUrl));
     };
 
     Login.prototype._determineClient = function() {
@@ -645,6 +651,9 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     },
     setRedirectOnLogin: function(value) {
       return this.instance.setRedirectOnLogin(value);
+    },
+    setReferrerUrl: function(url) {
+      return this.instance.setReferrerUrl(url);
     }
   };
 });

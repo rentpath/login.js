@@ -27,6 +27,7 @@ define [
       prefillEmailInput: true
       showDialogEventTemplate: 'uiShow{type}Dialog'
       redirectOnLogin: true
+      referrerUrl: null
     }
 
     constructor: (options) ->
@@ -92,7 +93,8 @@ define [
         $.cookie cookie, "", options
 
     wireupSocialLinks: ($div) ->
-      baseUrl = "#{zutron_host}?zid_id=#{@my.zid}&referrer=#{encodeURIComponent(@my.currentUrl)}"
+      url = @options.referrerUrl || @my.currentUrl
+      baseUrl = "#{zutron_host}?zid_id=#{@my.zid}&referrer=#{encodeURIComponent(url)}"
       baseUrl += "&realm=#{@options.realm}" if @options.realm
       baseUrl += '&technique='
       fbLink = $div.find("a.icon_facebook48")
@@ -148,6 +150,9 @@ define [
 
     setRedirectOnLogin: (value) ->
       @options.redirectOnLogin = value
+
+    setReferrerUrl: (url) ->
+      @options.referrerUrl = url
 
     _enableLoginRegistration: =>
       $('#zutron_register_form form').submit (e) =>
@@ -365,7 +370,7 @@ define [
 
     _setHiddenValues: ($form) ->
       $form.find("input#state").val @my.zid
-      $form.find("input#origin").val @_encodeURL(window.location.href)
+      $form.find("input#origin").val @_encodeURL(@options.referrerUrl || @my.currentUrl)
 
     _determineClient: ->
       if @my.currentUrl.indexOf('client') > 0
@@ -404,3 +409,4 @@ define [
   expireCookie: -> @instance.expireCookie()
   session: -> @instance.my.session
   setRedirectOnLogin: (value) -> @instance.setRedirectOnLogin(value)
+  setReferrerUrl: (url) -> @instance.setReferrerUrl(url)
