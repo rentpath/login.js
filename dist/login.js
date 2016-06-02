@@ -116,9 +116,8 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     };
 
     Login.prototype.wireupSocialLinks = function($div) {
-      var baseUrl, fbLink, googleLink, twitterLink, url;
-      url = this.options.referrerUrl || this.my.currentUrl;
-      baseUrl = zutron_host + "?zid_id=" + this.my.zid + "&referrer=" + (encodeURIComponent(url));
+      var baseUrl, fbLink, googleLink, twitterLink;
+      baseUrl = zutron_host + "?zid_id=" + this.my.zid + "&referrer=" + (encodeURIComponent(this.getReferrerUrl()));
       if (this.options.realm) {
         baseUrl += "&realm=" + this.options.realm;
       }
@@ -221,6 +220,10 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
 
     Login.prototype.setReferrerUrl = function(url) {
       return this.options.referrerUrl = url;
+    };
+
+    Login.prototype.getReferrerUrl = function() {
+      return this.options.referrerUrl || this.my.currentUrl;
     };
 
     Login.prototype._enableLoginRegistration = function() {
@@ -572,7 +575,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
 
     Login.prototype._setHiddenValues = function($form) {
       $form.find("input#state").val(this.my.zid);
-      return $form.find("input#origin").val(this._encodeURL(this.options.referrerUrl || this.my.currentUrl));
+      return $form.find("input#origin").val(this._encodeURL(this.getReferrerUrl()));
     };
 
     Login.prototype._determineClient = function() {

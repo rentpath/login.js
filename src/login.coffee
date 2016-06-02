@@ -93,8 +93,7 @@ define [
         $.cookie cookie, "", options
 
     wireupSocialLinks: ($div) ->
-      url = @options.referrerUrl || @my.currentUrl
-      baseUrl = "#{zutron_host}?zid_id=#{@my.zid}&referrer=#{encodeURIComponent(url)}"
+      baseUrl = "#{zutron_host}?zid_id=#{@my.zid}&referrer=#{encodeURIComponent(@getReferrerUrl())}"
       baseUrl += "&realm=#{@options.realm}" if @options.realm
       baseUrl += '&technique='
       fbLink = $div.find("a.icon_facebook48")
@@ -153,6 +152,9 @@ define [
 
     setReferrerUrl: (url) ->
       @options.referrerUrl = url
+
+    getReferrerUrl: ->
+      @options.referrerUrl || @my.currentUrl
 
     _enableLoginRegistration: =>
       $('#zutron_register_form form').submit (e) =>
@@ -370,7 +372,7 @@ define [
 
     _setHiddenValues: ($form) ->
       $form.find("input#state").val @my.zid
-      $form.find("input#origin").val @_encodeURL(@options.referrerUrl || @my.currentUrl)
+      $form.find("input#origin").val @_encodeURL(@getReferrerUrl())
 
     _determineClient: ->
       if @my.currentUrl.indexOf('client') > 0
