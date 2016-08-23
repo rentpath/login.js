@@ -371,8 +371,8 @@ define [
           @_triggerModal $("#zutron_error")
 
     _setHiddenValues: ($form) ->
-      $form.find("input#state").val @my.zid
-      $form.find("input#origin").val @_encodeURL(@getReferrerUrl())
+      $form.find('input[name=state]').val @my.zid
+      $form.find('input[name=origin]').val @_encodeURL(@getReferrerUrl())
 
     _determineClient: ->
       if @my.currentUrl.indexOf('client') > 0
