@@ -574,8 +574,8 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     };
 
     Login.prototype._setHiddenValues = function($form) {
-      $form.find("input#state").val(this.my.zid);
-      return $form.find("input#origin").val(this._encodeURL(this.getReferrerUrl()));
+      $form.find('input[name=state]').val(this.my.zid);
+      return $form.find('input[name=origin]').val(this._encodeURL(this.getReferrerUrl()));
     };
 
     Login.prototype._determineClient = function() {
