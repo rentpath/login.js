@@ -397,7 +397,7 @@ define [
       $.cookie 'zmail', email, { path: '/' }
 
     _overrideDependencies: ->
-      @MOBILE = window.location.host.match(/(^m\.|^local\.m\.)/)?
+      @MOBILE = window.ApartmentGuide.tagging.config.profile === 'm.apartmentguide.com'
       @BIGWEB = not @MOBILE
       if @BIGWEB
         @_clearInputs = ->
