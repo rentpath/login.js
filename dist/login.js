@@ -13,7 +13,8 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
       prefillEmailInput: true,
       showDialogEventTemplate: 'uiShow{type}Dialog',
       redirectOnLogin: true,
-      referrerUrl: null
+      referrerUrl: null,
+      isMobile: false
     };
 
     function Login(options) {
@@ -616,7 +617,7 @@ define(['jquery', 'primedia_events', 'login/error_handler', 'jquery.cookie'], fu
     };
 
     Login.prototype._overrideDependencies = function() {
-      this.MOBILE = window.location.host.match(/(^m\.|^local\.m\.)/) != null;
+      this.MOBILE = this.options.isMobile;
       this.BIGWEB = !this.MOBILE;
       if (this.BIGWEB) {
         return this._clearInputs = function() {};
