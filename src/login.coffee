@@ -28,6 +28,7 @@ define [
       showDialogEventTemplate: 'uiShow{type}Dialog'
       redirectOnLogin: true
       referrerUrl: null
+      isMobile: false
     }
 
     constructor: (options) ->
@@ -397,7 +398,7 @@ define [
       $.cookie 'zmail', email, { path: '/' }
 
     _overrideDependencies: ->
-      @MOBILE = window.location.host.match(/(^m\.|^local\.m\.)/)?
+      @MOBILE = @options.isMobile
       @BIGWEB = not @MOBILE
       if @BIGWEB
         @_clearInputs = ->
